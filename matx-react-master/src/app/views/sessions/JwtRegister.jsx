@@ -43,8 +43,8 @@ const initialValues = {
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(6, 'Password must be 6 character length')
-    .required('Password is required!'),
+    .min(6, 'Mot de passe doit avoir plus de 6 caractères!')
+    .required('Mot de passe est requis!'),
   email: Yup.string().email('Invalid Email address').required('Email is required!'),
 });
 
@@ -54,18 +54,22 @@ const JwtRegister = () => {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
 
-  const handleFormSubmit = (values) => {
-    setLoading(true);
+  const RegisterButtonSubmit = (values)=>{
 
-    try {
-      register(values.email, values.username, values.password);
-      navigate('/');
-      setLoading(false);
-    } catch (e) {
-      console.log(e);
-      setLoading(false);
-    }
-  };
+  }
+
+  // const handleFormSubmit = (values) => {
+  //   setLoading(true);
+
+  //   try {
+  //     register(values.email, values.username, values.password);
+  //     navigate('/');
+  //     setLoading(false);
+  //   } catch (e) {
+  //     console.log(e);
+  //     setLoading(false);
+  //   }
+  // };
 
   return (
     <JWTRegister>
@@ -84,7 +88,7 @@ const JwtRegister = () => {
           <Grid item sm={6} xs={12}>
             <Box p={4} height="100%">
               <Formik
-                onSubmit={handleFormSubmit}
+                onSubmit={RegisterButtonSubmit}
                 initialValues={initialValues}
                 validationSchema={validationSchema}
               >
@@ -155,16 +159,16 @@ const JwtRegister = () => {
                       variant="contained"
                       sx={{ mb: 2, mt: 3 }}
                     >
-                      Regiser
+                      S'inscrire
                     </LoadingButton>
 
                     <Paragraph>
-                      Already have an account?
+                      Avez-vous déja un compte?
                       <NavLink
                         to="/session/signin"
                         style={{ color: theme.palette.primary.main, marginLeft: 5 }}
                       >
-                        Login
+                        Connexion
                       </NavLink>
                     </Paragraph>
                   </form>
