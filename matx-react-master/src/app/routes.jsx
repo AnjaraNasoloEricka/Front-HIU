@@ -7,6 +7,7 @@ import NotFound from 'app/views/sessions/NotFound';
 import sessionRoutes from 'app/views/sessions/SessionRoutes';
 import { Navigate } from 'react-router-dom';
 import MatxLayout from './components/MatxLayout/MatxLayout';
+import todoRouter from 'app/views/todo/TodoRoutes';
 
 const routes = [
   {
@@ -15,7 +16,7 @@ const routes = [
         <MatxLayout />
       </AuthGuard>
     ),
-    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter],
+    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...todoRouter],
   },
   ...sessionRoutes,
   { path: '/', element: <Navigate to="dashboard/default" /> },
