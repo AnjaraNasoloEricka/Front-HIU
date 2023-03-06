@@ -64,7 +64,7 @@ export default function FormDialogProgram({program,color,icon,label}) {
             margin="dense"
             id="heure_debut"
             label="Heure debut"
-            value={program?.heure_debut}
+            defaultValue={program?.heure_debut}
             type="time"
             fullWidth
           />
@@ -74,7 +74,7 @@ export default function FormDialogProgram({program,color,icon,label}) {
             id="heure_fin"
             label="Heure fin"
             type="time"
-            value={program?.heure_fin}
+            defaultValue={program?.heure_fin}
             fullWidth
           />
           <TextField
@@ -83,7 +83,7 @@ export default function FormDialogProgram({program,color,icon,label}) {
             id="matiere"
             label="Matiere"
             type="text"
-            value={program?.matiere}
+            defaultValue={program?.matiere}
             fullWidth
           />
           <TextField
@@ -92,7 +92,7 @@ export default function FormDialogProgram({program,color,icon,label}) {
             id="theme"
             label="Theme"
             type="text"
-            value={program?.theme}
+            defaultValue={program?.theme}
             fullWidth
           />
         </DialogContent>
