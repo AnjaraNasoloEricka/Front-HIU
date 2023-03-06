@@ -1,5 +1,8 @@
 import {
   Box,
+  Card,
+  CardContent,
+  CardHeader,
   Icon,
   IconButton,
   styled,
@@ -12,6 +15,21 @@ import {
 } from "@mui/material";
 import { useState } from "react";
 import FormDialogProgram from "../MatxDialog/FormDialogProgram";
+
+
+import Timeline from '@mui/lab/Timeline';
+import TimelineItem from '@mui/lab/TimelineItem';
+import TimelineSeparator from '@mui/lab/TimelineSeparator';
+import TimelineConnector from '@mui/lab/TimelineConnector';
+import TimelineContent from '@mui/lab/TimelineContent';
+import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
+import TimelineDot from '@mui/lab/TimelineDot';
+import FastfoodIcon from '@mui/icons-material/Fastfood';
+import LaptopMacIcon from '@mui/icons-material/LaptopMac';
+import HotelIcon from '@mui/icons-material/Hotel';
+import RepeatIcon from '@mui/icons-material/Repeat';
+import Typography from '@mui/material/Typography';
+
 
 const StyledTable = styled(Table)(() => ({
   whiteSpace: "pre",
@@ -43,35 +61,55 @@ const PaginationTableProgram = ({programlist}) => {
       <StyledTable>
         <TableHead>
           <TableRow>
-            <TableCell align="left">Nom Jour</TableCell>
-            <TableCell align="center">Heure Debut</TableCell>
-            <TableCell align="center">Heure Fin</TableCell>
-            <TableCell align="center">Matiere</TableCell>
-            <TableCell align="center">Theme</TableCell>
-            <TableCell align="right"></TableCell>
-            <TableCell align="right"><FormDialogProgram program={defaultprogram} color="success" icon="add_icon" label="Ajouter"/></TableCell>
+            <TableCell align="center" sx={{ minWidth: 275 }}>Lundi</TableCell>
+            <TableCell align="center" sx={{ minWidth: 275 }}>Mardi</TableCell>
+            <TableCell align="center"sx={{ minWidth: 275 }}>Mercredi</TableCell>
+            <TableCell align="center"sx={{ minWidth: 275 }}>Jeudi</TableCell>
+            <TableCell align="center"sx={{ minWidth: 275 }}>Vendredi</TableCell>
+            <TableCell align="center"sx={{ minWidth: 275 }}>Samedi</TableCell>
+            <TableCell align="center"sx={{ minWidth: 275 }}>Dimanche</TableCell>
+            <TableCell align="center"><FormDialogProgram program={defaultprogram} color="success" icon="add_icon" label="Ajouter"/></TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
+        <TableRow>
           {programlist
-            .slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage)
-            .map((program, index) => (
-              <TableRow key={index}>
-                <TableCell align="left">{program.nom_jour}</TableCell>
-                <TableCell align="center">{program.heure_debut}</TableCell>
-                <TableCell align="center">{program.heure_fin}</TableCell>
-                <TableCell align="center">{program.matiere}</TableCell>
-                <TableCell align="center">{program.theme}</TableCell>
-                <TableCell align="right">
-                  <FormDialogProgram program={program} color="secondary" icon="edit_icon" label="Modifier"/>
-                </TableCell>
-                <TableCell align="right">
-                  <IconButton>
+            .map((program, index) => (       
+                <TableCell align="center" sx={{ minWidth: 275 }}>
+                  {program.map((jour) => (
+                    <>
+                     <Card sx={{backgroundColor:"black" }}>    
+                     <FormDialogProgram program={jour} color="secondary" icon="edit_icon" label="Modifier"/>
+                    </Card> 
+                    <Card sx={{minHeight: 25 ,backgroundColor:"darkblue",color:"white"}}>    
+                      <small>
+                        <strong>{jour.heure_debut}</strong>
+                        </small>
+                    </Card>                
+                    <Card sx={{maxHeight: 80 }}>    
+                      <h4>{jour.matiere}</h4> 
+                      <small>
+                        <strong>{jour.theme}</strong>
+                        </small>
+                    </Card>
+                    <Card  sx={{minHeight: 25 ,backgroundColor:"darkblue",color:"white"}}>    
+                      <small>
+                        <strong>{jour.heure_fin}</strong>
+                        </small>
+                    </Card>
+                    <Card  sx={{backgroundColor:"black" }}>    
+                    <IconButton>
                     <Icon color="error">close</Icon>
                   </IconButton>
+                    </Card> 
+                    <br/> 
+                    </>
+                  ))}
                 </TableCell>
-              </TableRow>
+    
             ))}
+            <TableCell align="right"></TableCell>
+            </TableRow>
         </TableBody>
       </StyledTable>
 
