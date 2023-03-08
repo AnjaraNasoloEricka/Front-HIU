@@ -16,9 +16,9 @@ import suggestionRoutes from './views/suggestion/SuggestionRoutes';
 const routes = [
   {
     element: (
-      <AuthGuard>
+      // <AuthGuard>
         <MatxLayout />
-      </AuthGuard>
+      // </AuthGuard>
     ),
     children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter, ...PublicationsRouter, ...CommentairesRouter, ...suggestionRoutes],
     // children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter,...suggestionRoutes],

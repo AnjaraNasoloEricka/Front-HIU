@@ -1,100 +1,109 @@
-import { LoadingButton } from '@mui/lab';
-import { Card, Alert, Grid, TextField } from '@mui/material';
-import { Box, styled, useTheme } from '@mui/system';
-import { Paragraph } from 'app/components/Typography';
-import useAuth from 'app/hooks/useAuth';
-import { Formik } from 'formik';
-import { useState } from 'react';
-import { NavLink, useNavigate } from 'react-router-dom';
-import * as Yup from 'yup';
+import { LoadingButton } from "@mui/lab";
+import { Card, Alert, Grid, TextField } from "@mui/material";
+import { Box, styled, useTheme } from "@mui/system";
+import { loginApi } from "app/apis/authApi";
+import { Paragraph } from "app/components/Typography";
+import useAuth from "app/hooks/useAuth";
+import { Formik } from "formik";
+import { useEffect, useState } from "react";
+import { NavLink, useNavigate } from "react-router-dom";
+import * as Yup from "yup";
 
-const FlexBox = styled(Box)(() => ({ display: 'flex', alignItems: 'center' }));
+const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
 
-const JustifyBox = styled(FlexBox)(() => ({ justifyContent: 'center' }));
+const JustifyBox = styled(FlexBox)(() => ({ justifyContent: "center" }));
 
 const ContentBox = styled(Box)(() => ({
-  height: '100%',
-  padding: '32px',
-  position: 'relative',
-  background: 'rgba(0, 0, 0, 0.01)',
+  height: "100%",
+  padding: "32px",
+  position: "relative",
+  background: "rgba(0, 0, 0, 0.01)",
 }));
 
 const JWTRoot = styled(JustifyBox)(() => ({
-  background: '#1A2038',
-  minHeight: '100% !important',
-  '& .card': {
+  background: "#1A2038",
+  minHeight: "100% !important",
+  "& .card": {
     maxWidth: 800,
     minHeight: 400,
-    margin: '1rem',
-    display: 'flex',
+    margin: "1rem",
+    display: "flex",
     borderRadius: 12,
-    alignItems: 'center',
+    alignItems: "center",
   },
 }));
-
-// inital login credentials
-const initialValues = {
-  email: 'johndoe@example.com',
-  password: 'Password@123',
-  remember: true,
-};
-
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(6, 'Le mot de passe doit être 6 caractères minimum')
-    .required('Mot de passe requis'),
-  email: Yup.string().email('Invalide adresse email').required('Adresse email requis'),
+    .min(6, "Le mot de passe doit être 6 caractères minimum")
+    .required("Mot de passe requis"),
+  email: Yup.string()
+    .email("Invalide adresse email")
+    .required("Adresse email requis"),
 });
 
 const JwtLogin = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
-  const [feedback, setFeedback] = useState(null);
+  const [feedback, setFeedback] = useState("");
+  const [emailState, setEmailState] = useState("johndoe@example.com");
+  const [passwordState, setPasswordState] = useState("Password@123");
 
-  const { login } = useAuth();
-
-  const handleFormSubmit = async (values) => {
+  const login = async (email, password) => {
+    setFeedback("")
     setLoading(true);
-    try {
-      const responseLogin = await login(values.email, values.password);
-      if( responseLogin._id === undefined ){
-        setFeedback( <Alert sx={{ m: 1 }} severity="warning" variant="filled">
-                        {responseLogin}
-                      </Alert>);
+    const loginData = {
+      email,
+      password,
+    };
+    loginApi(loginData)
+      .then((e) => {
+        const data = e.data;
+        const token = data.token;
+        if (token) {
+          localStorage.setItem("accessToken", token);
+          window.location = "/";
+        }
+      })
+      .catch((err) => {
+        setFeedback("Email ou mot de passe invalide");
+        console.error(err);
+      })
+      .finally(() => {
         setLoading(false);
-
-      } else if( responseLogin._id !== undefined ){
-        navigate('/');
-      }
-    } 
-    catch (e) {
-      setLoading(false);
-    }
+      });
   };
 
+  useEffect(()=>{
+    // if(feedback){
+    //   setTimeout(()=>{
+    //     setFeedback("")
+    //   },2000)
+    // }
+  },[feedback])
   return (
     <JWTRoot>
       <Card className="card">
         <Grid container>
           <Grid item sm={6} xs={12}>
             <JustifyBox p={4} height="100%" sx={{ minWidth: 320 }}>
-              <img src="/assets/images/illustrations/1.svg" width="100%" alt="" />
+              <img
+                src="/assets/images/illustrations/1.svg"
+                width="100%"
+                alt=""
+              />
             </JustifyBox>
           </Grid>
 
           <Grid item sm={6} xs={12}>
             <ContentBox>
-              {feedback}
+              {/* {feedback} */}
+              {feedback && <Alert severity="error">{feedback}</Alert>}
               <br />
-              <Formik
-                onSubmit={handleFormSubmit}
-                initialValues={initialValues}
-                validationSchema={validationSchema}
-              >
-                {({ values, errors, touched, handleChange, handleBlur, handleSubmit }) => (
-                  <form onSubmit={handleSubmit}>
+              <Formik>
+                {() => (
+                  <form>
                     <TextField
                       fullWidth
                       size="small"
@@ -102,11 +111,15 @@ const JwtLogin = () => {
                       name="email"
                       label="Email"
                       variant="outlined"
-                      onBlur={handleBlur}
-                      value={values.email}
-                      onChange={handleChange}
-                      helperText={touched.email && errors.email}
-                      error={Boolean(errors.email && touched.email)}
+                      value={emailState}
+                      onChange={(e) => {
+                        setEmailState(e.target.value);
+                      }}
+                      // onBlur={handleBlur}
+                      // value={values.email}
+                      // onChange={handleChange}
+                      // helperText={touched.email && errors.email}
+                      // error={Boolean(errors.email && touched.email)}
                       sx={{ mb: 3 }}
                     />
 
@@ -117,20 +130,27 @@ const JwtLogin = () => {
                       type="password"
                       label="Mot De Passe"
                       variant="outlined"
-                      onBlur={handleBlur}
-                      value={values.password}
-                      onChange={handleChange}
-                      helperText={touched.password && errors.password}
-                      error={Boolean(errors.password && touched.password)}
+                      value={passwordState}
+                      onChange={(e) => {
+                        setPasswordState(e.target.value);
+                      }}
+                      // onBlur={handleBlur}
+                      // value={values.password}
+                      // onChange={handleChange}
+                      // helperText={touched.password && errors.password}
+                      // error={Boolean(errors.password && touched.password)}
                       sx={{ mb: 1.5 }}
                     />
 
                     <LoadingButton
-                      type="submit"
+                      // type=""
                       color="primary"
                       loading={loading}
                       variant="contained"
                       sx={{ my: 2 }}
+                      onClick={() => {
+                        login(emailState, passwordState);
+                      }}
                     >
                       Se connecter
                     </LoadingButton>
@@ -139,7 +159,10 @@ const JwtLogin = () => {
                       Vous n'avez pas de compte?
                       <NavLink
                         to="/session/signup"
-                        style={{ color: theme.palette.primary.main, marginLeft: 5 }}
+                        style={{
+                          color: theme.palette.primary.main,
+                          marginLeft: 5,
+                        }}
                       >
                         S'inscrire ici
                       </NavLink>

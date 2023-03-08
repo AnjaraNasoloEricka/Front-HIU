@@ -14,7 +14,8 @@ const App = () => {
     <Provider store={Store}>
       <SettingsProvider>
         <MatxTheme>
-          <AuthProvider>{content}</AuthProvider>
+          {/* <AuthProvider>{content}</AuthProvider> */}
+          {content}
         </MatxTheme>
       </SettingsProvider>
     </Provider>
