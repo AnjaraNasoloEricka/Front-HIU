@@ -79,7 +79,7 @@ const Exams = () => {
           {isLoading ? (
             <MatxLoading />
           ) : (
-            <PaginationTableExam examlist={exams} />
+            <PaginationTableExam initializeExamsList={initializeExamsList} examlist={exams} />
           )}
         </SimpleCard>
       </Container>
