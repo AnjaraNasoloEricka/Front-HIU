@@ -10,6 +10,7 @@ import MatxLayout from './components/MatxLayout/MatxLayout';
 import ExamsRouter from './views/exams/ExamsRouter';
 import todoRouter from 'app/views/todo/TodoRoutes';
 import suggestionRoutes from './views/suggestion/SuggestionRoutes';
+import memorygameRouter from './views/memorygame/MemoryGameRoute';
 
 const routes = [
   {
@@ -18,7 +19,7 @@ const routes = [
         <MatxLayout />
       </AuthGuard>
     ),
-    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter,...suggestionRoutes],
+    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter,...suggestionRoutes,...memorygameRouter],
   },
   ...sessionRoutes,
   { path: '/', element: <Navigate to="dashboard/default" /> },
