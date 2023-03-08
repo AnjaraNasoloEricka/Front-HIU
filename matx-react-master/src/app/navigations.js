@@ -1,8 +1,9 @@
 export const navigations = [
-  { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
+  // { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
   { name: 'Emploi du temps', path: '/program', icon: 'eventnote' },
   { name: 'Todo', path: '/todo', icon: 'article' },
   { name: 'Examen', path: '/exams', icon: 'create' },
+  { name: 'Forum', path: '/forum', icon: 'forum' },
   // { label: 'PAGES', type: 'label' },
   {
     name: 'Session/Auth',

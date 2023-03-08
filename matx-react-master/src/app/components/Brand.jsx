@@ -1,5 +1,6 @@
 import { Box, styled } from '@mui/material';
 import { MatxLogo } from 'app/components';
+import { PROJECT_NAME } from 'app/config';
 import useSettings from 'app/hooks/useSettings';
 import { Span } from './Typography';
 
@@ -26,7 +27,7 @@ const Brand = ({ children }) => {
       <Box display="flex" alignItems="center">
         <MatxLogo />
         <StyledSpan mode={mode} className="sidenavHoverShow">
-          Matx
+          {PROJECT_NAME}
         </StyledSpan>
       </Box>
 

@@ -5,7 +5,7 @@ import { authRoles } from '../../auth/authRoles';
 const Publications = Loadable(lazy(() => import('./Publications')));
 
 const PublicationsRouter = [
-  { path: '/publications', element: <Publications />, auth: authRoles.admin },
+  { path: '/forum', element: <Publications />, auth: authRoles.admin },
 ];
 
 export default PublicationsRouter;
