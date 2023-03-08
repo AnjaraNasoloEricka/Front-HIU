@@ -1,8 +1,6 @@
 import {
   Box,
   Card,
-  CardContent,
-  CardHeader,
   Icon,
   IconButton,
   styled,
@@ -12,37 +10,30 @@ import {
   TableHead,
   TablePagination,
   TableRow,
-} from '@mui/material';
-import { useState } from 'react';
-import FormDialogProgram from '../MatxDialog/FormDialogProgram';
-
-import Timeline from '@mui/lab/Timeline';
-import TimelineItem from '@mui/lab/TimelineItem';
-import TimelineSeparator from '@mui/lab/TimelineSeparator';
-import TimelineConnector from '@mui/lab/TimelineConnector';
-import TimelineContent from '@mui/lab/TimelineContent';
-import TimelineOppositeContent from '@mui/lab/TimelineOppositeContent';
-import TimelineDot from '@mui/lab/TimelineDot';
-import FastfoodIcon from '@mui/icons-material/Fastfood';
-import LaptopMacIcon from '@mui/icons-material/LaptopMac';
-import HotelIcon from '@mui/icons-material/Hotel';
-import RepeatIcon from '@mui/icons-material/Repeat';
-import Typography from '@mui/material/Typography';
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import FormDialogAddAndModifyProgram from "../MatxDialog/FormDialogProgram/FormDialogAddAndModifyProgram";
 
 const StyledTable = styled(Table)(() => ({
-  whiteSpace: 'pre',
-  '& thead': {
-    '& tr': { '& th': { paddingLeft: 0, paddingRight: 0 } },
+  whiteSpace: "pre",
+  "& thead": {
+    "& tr": { "& th": { paddingLeft: 0, paddingRight: 0 } },
   },
-  '& tbody': {
-    '& tr': { '& td': { paddingLeft: 0, textTransform: 'capitalize' } },
+  "& tbody": {
+    "& tr": { "& td": { paddingLeft: 0, textTransform: "capitalize" } },
   },
 }));
 
-const PaginationTableProgram = ({ programlist }) => {
-  const defaultprogram = { heure_debut: '00:00', heure_fin: '00:00' };
+const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
+  const defaultprogram = { heure_debut: "08:00", heure_fin: "09:00" };
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(5);
+  const [programListState, setProgramListState] = useState({ ...programlist });
+  // const [openDeleteProgram, setOpenDeleteProgram] = useState(false)
+
+  useEffect(() => {
+    setProgramListState({ ...programlist });
+  }, [programlist]);
 
   const handleChangePage = (_, newPage) => {
     setPage(newPage);
@@ -52,6 +43,10 @@ const PaginationTableProgram = ({ programlist }) => {
     setRowsPerPage(+event.target.value);
     setPage(0);
   };
+
+  const handleDeleteProgram = (programId) => {
+    console.log(programId)
+  }
 
   return (
     <Box width="100%" overflow="auto">
@@ -80,7 +75,8 @@ const PaginationTableProgram = ({ programlist }) => {
               Dimanche
             </TableCell>
             <TableCell align="center">
-              <FormDialogProgram
+              <FormDialogAddAndModifyProgram
+                initializeProgramList={initializeProgramList}
                 program={defaultprogram}
                 color="success"
                 icon="add_icon"
@@ -91,15 +87,16 @@ const PaginationTableProgram = ({ programlist }) => {
         </TableHead>
         <TableBody>
           <TableRow>
-            {programlist &&
-              Object.keys(programlist).map((programKey, key0) => {
-                const dayProgram = programlist[programKey];
+            {programListState &&
+              Object.keys(programListState).map((programKey, key0) => {
+                const dayProgram = programListState[programKey];
                 return (
-                  <TableCell align="center" sx={{ minWidth: 275 }}>
+                  <TableCell align="center" sx={{ minWidth: 275 }} key={key0}>
                     {dayProgram.map((program) => (
                       <>
                         <Card>
-                          <FormDialogProgram
+                          <FormDialogAddAndModifyProgram
+                            initializeProgramList={initializeProgramList}
                             program={program}
                             color="secondary"
                             icon="edit_icon"
@@ -109,8 +106,8 @@ const PaginationTableProgram = ({ programlist }) => {
                         <Card
                           sx={{
                             minHeight: 25,
-                            backgroundColor: 'darkblue',
-                            color: 'white',
+                            backgroundColor: "darkblue",
+                            color: "white",
                             borderRadius: 0,
                           }}
                         >
@@ -127,8 +124,8 @@ const PaginationTableProgram = ({ programlist }) => {
                         <Card
                           sx={{
                             minHeight: 25,
-                            backgroundColor: 'darkblue',
-                            color: 'white',
+                            backgroundColor: "darkblue",
+                            color: "white",
                             borderRadius: 0,
                           }}
                         >
@@ -137,7 +134,9 @@ const PaginationTableProgram = ({ programlist }) => {
                           </small>
                         </Card>
                         <Card>
-                          <IconButton>
+                          <IconButton onClick={()=>{
+                            handleDeleteProgram(program?._id)
+                          }}>
                             <Icon color="error">close</Icon>
                           </IconButton>
                         </Card>
@@ -147,58 +146,6 @@ const PaginationTableProgram = ({ programlist }) => {
                   </TableCell>
                 );
               })}
-            {/* {programlist.map((program, index) => (
-              <TableCell align="center" sx={{ minWidth: 275 }}>
-                {program.map((jour) => (
-                  <>
-                    <Card>
-                      <FormDialogProgram
-                        program={jour}
-                        color="secondary"
-                        icon="edit_icon"
-                        label="Modifier"
-                      />
-                    </Card>
-                    <Card
-                      sx={{
-                        minHeight: 25,
-                        backgroundColor: 'darkblue',
-                        color: 'white',
-                        borderRadius: 0,
-                      }}
-                    >
-                      <small>
-                        <strong>{jour.heure_debut}</strong>
-                      </small>
-                    </Card>
-                    <Card sx={{ maxHeight: 80 }}>
-                      <h4>{jour.matiere}</h4>
-                      <small>
-                        <strong>{jour.theme}</strong>
-                      </small>
-                    </Card>
-                    <Card
-                      sx={{
-                        minHeight: 25,
-                        backgroundColor: 'darkblue',
-                        color: 'white',
-                        borderRadius: 0,
-                      }}
-                    >
-                      <small>
-                        <strong>{jour.heure_fin}</strong>
-                      </small>
-                    </Card>
-                    <Card>
-                      <IconButton>
-                        <Icon color="error">close</Icon>
-                      </IconButton>
-                    </Card>
-                    <br />
-                  </>
-                ))}
-              </TableCell>
-            ))} */}
             <TableCell align="right"></TableCell>
           </TableRow>
         </TableBody>
@@ -209,12 +156,12 @@ const PaginationTableProgram = ({ programlist }) => {
         page={page}
         component="div"
         rowsPerPage={rowsPerPage}
-        count={programlist.length}
+        count={programListState.length}
         onPageChange={handleChangePage}
         rowsPerPageOptions={[5, 10, 15]}
         onRowsPerPageChange={handleChangeRowsPerPage}
-        nextIconButtonProps={{ 'aria-label': 'Suivante' }}
-        backIconButtonProps={{ 'aria-label': 'Précédente' }}
+        nextIconButtonProps={{ "aria-label": "Suivante" }}
+        backIconButtonProps={{ "aria-label": "Précédente" }}
       />
     </Box>
   );
