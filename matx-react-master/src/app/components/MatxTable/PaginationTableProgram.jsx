@@ -1,6 +1,7 @@
 import {
   Box,
   Card,
+  CircularProgress,
   Icon,
   IconButton,
   styled,
@@ -11,7 +12,9 @@ import {
   TablePagination,
   TableRow,
 } from "@mui/material";
+import { deleteProgram } from "app/apis/programApi";
 import { useEffect, useState } from "react";
+import { MatxLoading } from "..";
 import FormDialogAddAndModifyProgram from "../MatxDialog/FormDialogProgram/FormDialogAddAndModifyProgram";
 
 const StyledTable = styled(Table)(() => ({
@@ -30,6 +33,7 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [programListState, setProgramListState] = useState({ ...programlist });
   // const [openDeleteProgram, setOpenDeleteProgram] = useState(false)
+  const [isLoadingDeleteProgram, setIsLoadingDeleteProgram] = useState(false);
 
   useEffect(() => {
     setProgramListState({ ...programlist });
@@ -45,8 +49,17 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
   };
 
   const handleDeleteProgram = (programId) => {
-    console.log(programId)
-  }
+    setIsLoadingDeleteProgram(programId);
+    deleteProgram(programId)
+      .then((e) => {})
+      .catch((err) => {
+        console.log(err);
+      })
+      .finally(() => {
+        initializeProgramList();
+        setIsLoadingDeleteProgram("");
+      });
+  };
 
   return (
     <Box width="100%" overflow="auto">
@@ -134,11 +147,17 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
                           </small>
                         </Card>
                         <Card>
-                          <IconButton onClick={()=>{
-                            handleDeleteProgram(program?._id)
-                          }}>
-                            <Icon color="error">close</Icon>
-                          </IconButton>
+                          {isLoadingDeleteProgram === program._id ? (
+                            <CircularProgress className="cirle-progress" />
+                          ) : (
+                            <IconButton
+                              onClick={() => {
+                                handleDeleteProgram(program?._id);
+                              }}
+                            >
+                              <Icon color="error">close</Icon>
+                            </IconButton>
+                          )}
                         </Card>
                         <br />
                       </>
