@@ -29,6 +29,15 @@ const setSession = (accessToken) => {
     }
 }
 
+const handleLogin = (response) => {
+    if( response.token === undefined ){
+        return response.message;
+    } else if( response.token !== undefined ){
+        setSession(response.token);
+        return response.user;
+    }
+}
+
 const reducer = (state, action) => {
     switch (action.type) {
         case 'INIT': {
@@ -80,36 +89,76 @@ const AuthContext = createContext({
     register: () => Promise.resolve(),
 })
 
+
 export const AuthProvider = ({ children }) => {
     const [state, dispatch] = useReducer(reducer, initialState)
 
     const login = async (email, password) => {
-        const response = await axios.post('/api/auth/login', {
+        const loginData = {
             email,
-            password,
-        })
-        const { accessToken, user } = response.data
+            password
+        }
+        var user = null;
 
-        setSession(accessToken)
+        const request = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(loginData),
+        }
+
+        await fetch('https://mini-hiu-2023-api.vercel.app/etudiant/login', request).then(response => response.json())
+        .then(data => { 
+            user = handleLogin(data); 
+        })
+        .catch(err => {
+            console.log("Here there is an error bro "+err);
+            user = err; 
+        });
 
         dispatch({
             type: 'LOGIN',
             payload: {
                 user,
             },
-        })
+        })     
+        return user;
     }
 
-    const register = async (email, username, password) => {
-        const response = await axios.post('/api/auth/register', {
-            email,
-            username,
-            password,
+    const register = async (nom, prenom, email, password, passwordConf, tel, profil, classe) => {
+        const userRegister = {
+           nom,
+           prenom,
+           email,
+           password,
+           passwordConf,
+           tel, 
+           profil,
+           classe
+        }
+        var feedback = null;
+        var user = null;
+
+        const request = {
+            method: 'POST',
+            headers: {'Content-Type': 'application/json'},
+            body: JSON.stringify(userRegister),
+        }
+
+        await fetch('https://mini-hiu-2023-api.vercel.app/etudiant/register', request).then(response => response.json())
+        .then(data => { 
+            if( data.token === undefined ){
+                feedback = data;
+            } else if( data.token !== undefined ){
+                setSession(data.token);
+                user = data.user;
+                feedback = data;
+            }
+
         })
-
-        const { accessToken, user } = response.data
-
-        setSession(accessToken)
+        .catch(err => {
+            console.log("Here there is an error bro "+err);
+            feedback = err;
+        });
 
         dispatch({
             type: 'REGISTER',
@@ -117,6 +166,7 @@ export const AuthProvider = ({ children }) => {
                 user,
             },
         })
+        return feedback;
     }
 
     const logout = () => {
@@ -129,7 +179,7 @@ export const AuthProvider = ({ children }) => {
             try {
                 const accessToken = window.localStorage.getItem('accessToken')
 
-                if (accessToken && isValidToken(accessToken)) {
+                if (accessToken && isValidToken(accessToken)) { 
                     setSession(accessToken)
                     const response = await axios.get('/api/auth/profile')
                     const { user } = response.data

@@ -1,5 +1,5 @@
 import { LoadingButton } from '@mui/lab';
-import { Card, Checkbox, Grid, TextField } from '@mui/material';
+import { Card, Alert, Grid, TextField } from '@mui/material';
 import { Box, styled, useTheme } from '@mui/system';
 import { Paragraph } from 'app/components/Typography';
 import useAuth from 'app/hooks/useAuth';
@@ -34,32 +34,42 @@ const JWTRoot = styled(JustifyBox)(() => ({
 
 // inital login credentials
 const initialValues = {
-  email: 'jason@ui-lib.com',
-  password: 'dummyPass',
+  email: 'johndoe@example.com',
+  password: 'Password@123',
   remember: true,
 };
 
 // form field validation schema
 const validationSchema = Yup.object().shape({
   password: Yup.string()
-    .min(6, 'Password must be 6 character length')
-    .required('Password is required!'),
-  email: Yup.string().email('Invalid Email address').required('Email is required!'),
+    .min(6, 'Le mot de passe doit être 6 caractères minimum')
+    .required('Mot de passe requis'),
+  email: Yup.string().email('Invalide adresse email').required('Adresse email requis'),
 });
 
 const JwtLogin = () => {
   const theme = useTheme();
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
+  const [feedback, setFeedback] = useState(null);
 
   const { login } = useAuth();
 
   const handleFormSubmit = async (values) => {
     setLoading(true);
     try {
-      await login(values.email, values.password);
-      navigate('/');
-    } catch (e) {
+      const responseLogin = await login(values.email, values.password);
+      if( responseLogin._id === undefined ){
+        setFeedback( <Alert sx={{ m: 1 }} severity="warning" variant="filled">
+                        {responseLogin}
+                      </Alert>);
+        setLoading(false);
+
+      } else if( responseLogin._id !== undefined ){
+        navigate('/');
+      }
+    } 
+    catch (e) {
       setLoading(false);
     }
   };
@@ -70,12 +80,14 @@ const JwtLogin = () => {
         <Grid container>
           <Grid item sm={6} xs={12}>
             <JustifyBox p={4} height="100%" sx={{ minWidth: 320 }}>
-              <img src="/assets/images/illustrations/dreamer.svg" width="100%" alt="" />
+              <img src="/assets/images/illustrations/1.svg" width="100%" alt="" />
             </JustifyBox>
           </Grid>
 
           <Grid item sm={6} xs={12}>
             <ContentBox>
+              {feedback}
+              <br />
               <Formik
                 onSubmit={handleFormSubmit}
                 initialValues={initialValues}
@@ -103,7 +115,7 @@ const JwtLogin = () => {
                       size="small"
                       name="password"
                       type="password"
-                      label="Password"
+                      label="Mot De Passe"
                       variant="outlined"
                       onBlur={handleBlur}
                       value={values.password}
@@ -113,27 +125,6 @@ const JwtLogin = () => {
                       sx={{ mb: 1.5 }}
                     />
 
-                    <FlexBox justifyContent="space-between">
-                      <FlexBox gap={1}>
-                        <Checkbox
-                          size="small"
-                          name="remember"
-                          onChange={handleChange}
-                          checked={values.remember}
-                          sx={{ padding: 0 }}
-                        />
-
-                        <Paragraph>Remember Me</Paragraph>
-                      </FlexBox>
-
-                      <NavLink
-                        to="/session/forgot-password"
-                        style={{ color: theme.palette.primary.main }}
-                      >
-                        Forgot password?
-                      </NavLink>
-                    </FlexBox>
-
                     <LoadingButton
                       type="submit"
                       color="primary"
@@ -141,16 +132,16 @@ const JwtLogin = () => {
                       variant="contained"
                       sx={{ my: 2 }}
                     >
-                      Login
+                      Se connecter
                     </LoadingButton>
 
                     <Paragraph>
-                      Don't have an account?
+                      Vous n'avez pas de compte?
                       <NavLink
                         to="/session/signup"
                         style={{ color: theme.palette.primary.main, marginLeft: 5 }}
                       >
-                        Register
+                        S'inscrire ici
                       </NavLink>
                     </Paragraph>
                   </form>
