@@ -48,21 +48,14 @@ export const updateProgram = async (programId, newProgram) => {
   return request;
 };
 export const deleteProgram = async (programId) => {
-  const data = {
-    
-  };
-  console.log(data);
-  const request = await axios.delete(
-    `${BASE_URL}/program`,
-    {
-      data: {
-        idProgram: `${programId}`,
-      },
-      headers: {
-        "Content-Type": "application/json",
-        "x-auth-token": TOKEN,
-      },
+  const request = await axios.delete(`${BASE_URL}/program`, {
+    data: {
+      idProgram: `${programId}`,
     },
-  );
+    headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": TOKEN,
+    },
+  });
   return request;
 };

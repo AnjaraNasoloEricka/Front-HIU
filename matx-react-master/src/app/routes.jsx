@@ -11,6 +11,7 @@ import ExamsRouter from './views/exams/ExamsRouter';
 import todoRouter from 'app/views/todo/TodoRoutes';
 import PublicationsRouter from './views/publications/PublicationsRouter';
 import CommentairesRouter from './views/commentaires/CommentairesRouter';
+import suggestionRoutes from './views/suggestion/SuggestionRoutes';
 
 const routes = [
   {
@@ -20,6 +21,7 @@ const routes = [
       </AuthGuard>
     ),
     children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter, ...PublicationsRouter, ...CommentairesRouter],
+    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter,...suggestionRoutes],
   },
   ...sessionRoutes,
   { path: '/', element: <Navigate to="dashboard/default" /> },
