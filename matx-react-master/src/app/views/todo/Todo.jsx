@@ -1,114 +1,169 @@
-import { Box, Button, Container } from "@mui/material";
+import { Box, Button, Card, CardContent, Checkbox, Container, Grid } from "@mui/material";
 import Board, { moveCard } from "@lourenci/react-kanban";
 import "@lourenci/react-kanban/dist/styles.css";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Breadcrumb, SimpleCard } from "app/components";
 import { render } from "react-dom";
+import MyTimeTable from "./MyTimeTable";
+import FormDialogAddTodo from "app/components/MatxDialog/FormDialogAddTodo";
+import { CheckBox } from "@mui/icons-material";
+import AssignmentIcon from '@mui/icons-material/Assignment';
+import SimpleCheckbox from "../material-kit/checkbox/SimpleCheckbox";
+import { useNavigate } from "react-router-dom";
+import FormDialogUpdateTodo from "app/components/MatxDialog/FormDialogUpdateTodo";
 
-const board = {
-    columns: [
-      {
-        id: 1,
-        title: "A faire",
-        backgroundColor: "#000",
-        cards: [
-          {
-            id: 1,
-            title: "Card title 1",
-            content: "huhu"
-          },
-          {
-            id: 2,
-            title: "Card title 2",
-            content: "huhu"
-          }
-        ]
-      },
-      {
-        id: 2,
-        title: "En cours",
-        backgroundColor: "#000",
-        cards: [
-          {
-            id: 1,
-            title: "Card title 3",
-            content: "huhu"
-          },
-          {
-            id: 2,
-            title: "Card title 4",
-            content: "huhu"
-          }
-        ]
-      },
-      {
-        id: 3,
-        title: "Terminé",
-        backgroundColor: "#000",
-        cards: [
-          {
-            id: 1,
-            title: "Card title 5",
-            content: "huhu"
-          },
-          {
-            id: 2,
-            title: "Card title 6",
-            content: "huhu"
-          }
-        ]
-      }
-    ]
-  };
-
-
-  function UncontrolledBoard() {
-    return (
-      <Board
-        allowRemoveLane
-        allowRenameColumn
-        allowRemoveCard
-        onLaneRemove={console.log}
-        onCardRemove={console.log}
-        onLaneRename={console.log}
-        initialBoard={board}
-        allowAddCard={{ on: "top" }}
-        onNewCardConfirm={(draftCard) => ({
-          id: new Date().getTime(),
-          ...draftCard
-        })}
-        onCardNew={console.log}
-      />
-    );
-  }
-
-  function ControlledBoard() {
-    // You need to control the state yourself.
-    const [controlledBoard, setBoard] = useState(board);
-  
-    function handleCardMove(_card, source, destination) {
-      const updatedBoard = moveCard(controlledBoard, source, destination);
-      setBoard(updatedBoard);
+function todoData(setter){
+  fetch('https://mini-hiu-2023-api.vercel.app/todo', {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
     }
-  
-    return (
-      <Board onCardDragEnd={handleCardMove} disableColumnDrag>
-        {controlledBoard}
-      </Board>
-    );
-  }
+  })
+  .then(response => response.json())
+  .then(data => setter(data))
+  .catch(error => console.error(error));
+}
+
 
 const Todo=()=>{
+    const [todo, setTodo] = useState([]);
+    const navigate = useNavigate();
+
+    function changeCheck(task){
+      fetch('https://mini-hiu-2023-api.vercel.app/todo/finir/'+task._id, {
+          method: 'PUT',
+          headers: {
+            'Content-Type': 'application/json',
+            'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
+          }
+      })
+      .then(response => response.json())
+      .then(data => navigate(0))
+      .catch(error => console.error(error));
+
+    }
+
+    const deleteTodo = (task) => {
+      fetch('https://mini-hiu-2023-api.vercel.app/todo/'+task._id, {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+          'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
+        },
+        body: JSON.stringify({
+        tache: task.tache
+       })
+      })
+      .then(response => response.json())
+      .then(data => navigate(0))
+      .catch(error => console.error(error));
+    }
+    
+
+    useEffect(() => {
+        todoData(setTodo);
+    }, []);
+
     return (      
         <Container>
                 <Box className="breadcrumb">
-                         <br/>
-                         <Breadcrumb routeSegments={[{ name: "Programme", path: "/programme" }]} /> 
-                         <br/> 
+                <br/>
+                    <Grid container spacing={10}>
+                            <Grid item md={6} sm={6} xs={6}>
+                            <Breadcrumb routeSegments={[{ name: "To do List", path: "/todo" }]} /> 
+                            <FormDialogAddTodo/>
+                            </Grid>
+                            <Grid item md={2} sm={2} xs={2}>
+                            </Grid>
+                            <Grid item md={4} sm={4} xs={4}>
+                              <p>
+                              <Button variant="outlined" color="secondary">Simuler emploi du temps</Button>
+                              </p>
+                            </Grid>
+                    </Grid>  
+                    <br/>                        
                 </Box>
-                <SimpleCard title="To do List">
-                    <UncontrolledBoard />
-                </SimpleCard> 
+                <Grid container spacing={3}>
+                  <Grid item md={6} sm={6} xs={6}>
+                    <Card title="To do List" style={{width:"100%"}}>
+                        <center><h4>A faire</h4></center>
+                    <CardContent style={{backgroundColor:"#212841"}}>
+                    {todo.filter((item) => item.isDone === "no").map((item) => (
+                      <>
+                        <Card>
+                            <Grid container spacing={1}>
+                              <Grid item md={1} sm={1} xs={1}></Grid>
+                              <Grid item md={1} sm={1} xs={1}><h5></h5></Grid>
+                              <Grid item md={8} sm={8} xs={8}>
+                                <h6 style={{fontSize:"13px"}}>{item.tache}
+                                <p>
+                                <Grid container spacing={2}>
+                                  <Grid item md={4} sm={4} xs={4}>
+                                    <FormDialogUpdateTodo todo={item}/>
+                                  </Grid>
+                                  <Grid item md={6} sm={6} xs={6}>
+                                    <Button variant="outlined" color="inherit" style={{color:"red"}} onClick={()=>deleteTodo(item)}>Supprimer</Button>
+                                  </Grid>
+                                </Grid>
+                                </p>
+                                </h6>
+                              </Grid>
+                              <Grid item md={2} sm={2} xs={2}><h5>
+                              <Checkbox
+                                  color="primary"
+                                  value="checkedG"
+                                  onChange={()=>changeCheck(item)}
+                                />
+                                </h5></Grid>
+                            </Grid>
+                            
+                        </Card>  
+                        <br/>
+                      </>
+                    ))}
+                    </CardContent>
+                    </Card> 
+                  </Grid>
+                  <Grid item md={6} sm={6} xs={6}>
+                    <Card title="To do List" style={{width:"100%"}}>
+                      <center><h4>Fait</h4></center>
+                      <CardContent style={{backgroundColor:"#212841"}}>
+                      {todo.filter((item) => item.isDone != "no").map((item) => (
+                      <>
+                        <Card>
+                            <Grid container spacing={1}>
+                              <Grid item md={1} sm={1} xs={1}></Grid>
+                              <Grid item md={1} sm={1} xs={1}><h5></h5></Grid>
+                              <Grid item md={8} sm={8} xs={8}>
+                                <h6 style={{fontSize:"13px"}}>{item.tache}
+                                <p>
+                                <Grid container spacing={2}>
+                                  <Grid item md={4} sm={4} xs={4}>
+                                    <FormDialogUpdateTodo todo={item}/>
+                                  </Grid>
+                                  <Grid item md={6} sm={6} xs={6}>
+                                    <Button variant="outlined" color="inherit" style={{color:"red"}} onClick={()=>deleteTodo(item)}>Supprimer</Button>
+                                  </Grid>
+                                </Grid>
+                                </p>
+                                </h6>
+                              </Grid>
+                              <Grid item md={2} sm={2} xs={2}>
+                                <h5>
+                                </h5>
+                              </Grid>
+                            </Grid>
+                            
+                        </Card>  
+                        <br/>
+                      </>
+                    ))}
+                      </CardContent>
+                    </Card>
+                  </Grid>
+                </Grid>
+                
                 <br/> 
         </Container>
 
