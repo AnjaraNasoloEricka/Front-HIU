@@ -408,7 +408,7 @@ const IconList = [
   "headset",
   "headset_mic",
   "healing",
-  "hearing",
+  "deleteforevering",
   "help",
   "help_outline",
   "high_quality",
