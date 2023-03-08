@@ -9,7 +9,7 @@ import FormDialogAddTodo from "app/components/MatxDialog/FormDialogAddTodo";
 import { CheckBox } from "@mui/icons-material";
 import AssignmentIcon from '@mui/icons-material/Assignment';
 import SimpleCheckbox from "../material-kit/checkbox/SimpleCheckbox";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import FormDialogUpdateTodo from "app/components/MatxDialog/FormDialogUpdateTodo";
 
 function todoData(setter){
@@ -78,7 +78,9 @@ const Todo=()=>{
                             </Grid>
                             <Grid item md={4} sm={4} xs={4}>
                               <p>
-                              <Button variant="outlined" color="secondary">Simuler emploi du temps</Button>
+                                <Link to="/suggestion">
+                                  <Button variant="outlined" color="secondary">Simuler emploi du temps</Button>
+                                </Link>
                               </p>
                             </Grid>
                     </Grid>  
