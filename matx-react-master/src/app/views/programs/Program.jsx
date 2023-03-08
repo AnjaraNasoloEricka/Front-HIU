@@ -1,95 +1,66 @@
 import { Box, styled } from "@mui/material";
+import { getProgramList } from "app/apis/programApi";
 import { Breadcrumb, SimpleCard } from "app/components";
 import PaginationTableProgram from "app/components/MatxTable/PaginationTableProgram";
-import MyTimeTable from "app/components/MatxTimeTable/MyTimeTable";
-import TimeTable from "react-timetable-events";
+import Loading from '../../components/MatxLoading';
+// import MyTimeTable from 'app/components/MatxTimeTable/MyTimeTable';
+// import { BASE_URL, TOKEN } from 'app/config';
+// import axios from 'axios';
+import { useEffect, useState } from "react";
+// import TimeTable from 'react-timetable-events';
 
 const Container = styled("div")(({ theme }) => ({
-    margin: "30px",
-    [theme.breakpoints.down("sm")]: { margin: "16px" },
-    "& .breadcrumb": {
-      marginBottom: "30px",
-      [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
-    },
-  }));
+  margin: "30px",
+  [theme.breakpoints.down("sm")]: { margin: "16px" },
+  "& .breadcrumb": {
+    marginBottom: "30px",
+    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
+  },
+}));
 
-  const day=["Lundi","Mardi","Mercredi","Jeudi","Vendredi","Samedi","Dimanche"]
+const Program = () => {
+  const [isLoading, setIsLoading] = useState(true);
+  const [programs, setPrograms] = useState({});
 
-  const programs = [
-    [{
-      nom_jour: "Lundi",
-      heure_debut: "12:00:00",
-      heure_fin: "13:00:00",
-      matiere: "Maths",
-      theme: "MAO",
-    },{
-        nom_jour: "Lundi",
-        heure_debut: "13:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Maths",
-        theme: "MAO2",
-    }],
-    [{
-        nom_jour: "Mardi",
-        heure_debut: "10:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Web Dynamique",
-        theme: "Servlet",
-    }],
-    [{
-        nom_jour: "Mercredi",
-        heure_debut: "10:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Web Dynamique",
-        theme: "Servlet",
-    }],
-    [{
-        nom_jour: "Jeudi",
-        heure_debut: "10:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Web Dynamique",
-        theme: "Servlet",
-    }],
-    [{
-        nom_jour: "Vendredi",
-        heure_debut: "10:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Web Dynamique",
-        theme: "Servlet",
-    }],
-    [{
-        nom_jour: "Samedi",
-        heure_debut: "10:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Web Dynamique",
-        theme: "Servlet",
-    }],
-    [{
-        nom_jour: "Dimanche",
-        heure_debut: "10:00:00",
-        heure_fin: "14:00:00",
-        matiere: "Web Dynamique",
-        theme: "Servlet",
-    }],
-  ];
+  const initializeProgramList = () => {
+    setIsLoading(true)
+    getProgramList()
+      .then((e) => {
+        const data = e;
+        if (data) {
+          setPrograms(data);
+        }
+      })
+      .catch((err) => {
+        // catch error here
+        alert(err);
+      })
+      .finally(() => {
+        setIsLoading(false);
+      });
+  };
+  useEffect(() => {
+    initializeProgramList();
+  }, []);
+  return (
+    <div>
+      <Container>
+        <Box className="breadcrumb">
+          <Breadcrumb
+            routeSegments={[{ name: "Programme", path: "/programme" }]}
+          />
+        </Box>
 
+        <SimpleCard title="Mon Emploi du temps">
+          {isLoading ? (
+            <Loading />
+          ) : (
+            <PaginationTableProgram initializeProgramList={initializeProgramList} programlist={programs} />
+          )}
+        </SimpleCard>
+      </Container>
+    </div>
+  );
+};
 
-const Program=()=>{
-    return(
-        <div>
-            <Container>
-                 <Box className="breadcrumb">
-                    <Breadcrumb routeSegments={[{ name: "Programme", path: "/programme" }]} />       
-                </Box>
-
-                <SimpleCard title="Mon Emploi du temps">
-                    <PaginationTableProgram programlist={programs}/>  
-                       
-                </SimpleCard> 
-            </Container>
-        </div>
-    )
-}
-
- 
-export default Program
+export default Program;
