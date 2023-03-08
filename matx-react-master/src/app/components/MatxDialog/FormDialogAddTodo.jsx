@@ -9,6 +9,7 @@ import DialogContent from '@mui/material/DialogContent';
 import DialogContentText from '@mui/material/DialogContentText';
 import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
+import { TOKEN } from "app/config";
 import React, { useRef } from 'react';
 import { useNavigate } from "react-router-dom";
 
@@ -28,7 +29,7 @@ export default function FormDialogAddTodo() {
             method: 'POST',
             headers: {
               'Content-Type': 'application/json',
-              'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
+              'x-auth-token': TOKEN
             },
             body: JSON.stringify({
               tache: task.current.value,

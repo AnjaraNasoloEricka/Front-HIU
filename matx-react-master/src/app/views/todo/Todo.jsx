@@ -11,13 +11,14 @@ import AssignmentIcon from '@mui/icons-material/Assignment';
 import SimpleCheckbox from "../material-kit/checkbox/SimpleCheckbox";
 import { Link, useNavigate } from "react-router-dom";
 import FormDialogUpdateTodo from "app/components/MatxDialog/FormDialogUpdateTodo";
+import { TOKEN } from "app/config";
 
 function todoData(setter){
   fetch('https://mini-hiu-2023-api.vercel.app/todo', {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
+      'x-auth-token': TOKEN
     }
   })
   .then(response => response.json())
@@ -35,7 +36,7 @@ const Todo=()=>{
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
-            'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
+            'x-auth-token': TOKEN
           }
       })
       .then(response => response.json())
@@ -49,7 +50,7 @@ const Todo=()=>{
         method: 'DELETE',
         headers: {
           'Content-Type': 'application/json',
-          'x-auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI0MDA4MiwiZXhwIjoxNjc4MzI2NDgyfQ.lDvAZ2twpfEGqzXO-5lKJgsBTY0P9stVvxbfUk3ZiJ4'
+          'x-auth-token': TOKEN
         },
         body: JSON.stringify({
         tache: task.tache
