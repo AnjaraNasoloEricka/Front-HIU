@@ -1,16 +1,16 @@
-import { Stack, Button } from '@mui/material';
-import { Box, styled } from '@mui/system';
-import { Breadcrumb, SimpleCard } from 'app/components';
-import { useEffect, useRef, useState } from 'react';
-import QuizCard from './QuizCard';
-import ResultQuiz from './ResultQuiz';
+import { Stack, Button, Card } from "@mui/material";
+import { Box, styled } from "@mui/system";
+import { Breadcrumb, MatxLoading, SimpleCard } from "app/components";
+import { useEffect, useRef, useState } from "react";
+import QuizCard from "./QuizCard";
+import ResultQuiz from "./ResultQuiz";
 
-const Container = styled('div')(({ theme }) => ({
-  margin: '30px',
-  [theme.breakpoints.down('sm')]: { margin: '16px' },
-  '& .breadcrumb': {
-    marginBottom: '30px',
-    [theme.breakpoints.down('sm')]: { marginBottom: '16px' },
+const Container = styled("div")(({ theme }) => ({
+  margin: "30px",
+  [theme.breakpoints.down("sm")]: { margin: "16px" },
+  "& .breadcrumb": {
+    marginBottom: "30px",
+    [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
   },
 }));
 
@@ -19,57 +19,64 @@ const StyledButton = styled(Button)(({ theme }) => ({
 }));
 
 const token =
-  'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI3NDkxNywiZXhwIjoxNjc4MzYxMzE3fQ.0bG52277kyMKk0VIHFi4vkt4twBuMFr2rUFB0oamS6c';
-const url = 'https://mini-hiu-2023-api.vercel.app/level-test/generate';
+  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI3NDkxNywiZXhwIjoxNjc4MzYxMzE3fQ.0bG52277kyMKk0VIHFi4vkt4twBuMFr2rUFB0oamS6c";
+const url = "https://mini-hiu-2023-api.vercel.app/level-test/generate";
 
 const Quiz = () => {
+  const [isLoadingListQuiz, setIsLoadingListQuiz] = useState(true);
   const quizrep = useRef({});
-  const [etat,setEtat]=useState(0);
-  const [nbQuizz,setNbQuiz]=useState(0);
-  const[bnReponse,setBnReponse]=useState(0);
-  const [listquiz, setList] = useState([]);
+  const [showResult, setShowResult] = useState(false);
+  const [nbQuizz, setNbQuiz] = useState(0);
+  const [bnReponse, setBnReponse] = useState(0);
+  const [listquiz, setListQuiz] = useState([]);
 
+  const initializeQuizList = () => {
+    setIsLoadingListQuiz(true);
+    const options = {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": token,
+      },
+      body: JSON.stringify({
+        subject: "mathematique",
+        theme: "soustraction",
+      }),
+    };
 
-
-  const options = {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-auth-token': token,
-    },
-    body: JSON.stringify({
-      subject: 'mathematique',
-      theme: 'limite',
-    }),
-  };
-  useEffect(() => {
     fetch(url, options)
       .then((response) => response.json())
       .then((data) => {
-        console.log(data);
-        setList(data);
-        Object.keys(listquiz).map((quizkey, key) => {
-            const li = listquiz[quizkey];
-            console.log("Voici le nombre "+li.length);
-            setNbQuiz(li.length)
-        })
-       
+        const datasList = data.datas;
+        setListQuiz(datasList);
+        console.log(datasList);
+        setNbQuiz(Object.keys(datasList).length);
       })
-      .catch((error) => console.error(error));
+      .catch((error) => console.error(error))
+      .finally(() => {
+        setIsLoadingListQuiz(false);
+      });
+  };
+
+  useEffect(() => {
+    initializeQuizList();
   }, []);
 
-  const resultat = () => {
-    Object.keys(listquiz).map((quizkey, key) => {
-    const li = listquiz[quizkey];
-    li.map((quizz, index) => {
-       console.log("huhuhu");
-            if(quizz.idReponse== parseInt(quizrep.current[index])){            
-                    setBnReponse(bnReponse+1);
-            }
-      })  
-    })
-    setEtat(1);
-
+  const getResultat = () => {
+    let totalBonnesReponses = 0;
+    Object.keys(listquiz).forEach((quizkey, key) => {
+      const quizz = listquiz[quizkey];
+      if (quizz.idReponse === parseInt(quizrep.current[key].value)) {
+        totalBonnesReponses += 1;
+      }
+      // li.forEach((quizz, index) => {
+      //   if (quizz.idReponse === parseInt(quizrep.current[index])) {
+      //     setBnReponse(bnReponse + 1);
+      //   }
+      // });
+    });
+    setBnReponse(totalBonnesReponses);
+    setShowResult(1);
   };
 
   const handleChange = (e, index) => {
@@ -78,56 +85,62 @@ const Quiz = () => {
 
   const renderCard = (quizz, index) => {
     quizrep.current[index] = {
-      value: 0,
+      value: null,
     };
-    if(etat==0){
-        return (
-            <div>
-              <QuizCard question={quizz} handleChange={handleChange} index={index}></QuizCard>
-          
-            </div>
-          );
+    if (!showResult) {
+      return (
+        <div>
+          <QuizCard
+            question={quizz}
+            handleChange={handleChange}
+            index={index}
+          ></QuizCard>
+        </div>
+      );
     }
-    if(etat==1){
-        return (
-            <div>
-              <ResultQuiz question={quizz}></ResultQuiz>
-          
-            </div>
-          );
+    if (showResult) {
+      return (
+        <div>
+          <ResultQuiz question={quizz}></ResultQuiz>
+        </div>
+      );
     }
   };
 
   return (
     <Container>
       <Box className="breadcrumb">
-        <Breadcrumb routeSegments={[{ name: 'Material', path: '/material' }, { name: 'Radio' }]} />
+        <Breadcrumb routeSegments={[{ name: "Quizz" }]} />
       </Box>
-
       <Stack spacing={3}>
-        {etat==1 &&
-                <SimpleCard title={bnReponse+" bonnes réponses sur"+nbQuizz+" questions"}></SimpleCard>
-        }
-        
-        {Object.keys(listquiz).map((quizkey, key) => {
-          const li = listquiz[quizkey];
-          setNbQuiz(li.length);
-       
-          return (
-            <div>
-              {li.map((quizz, index) => {
-                return renderCard(quizz, index);
-              })}
-            </div>
-          );
-        })}
+        {showResult && (
+          <Card
+            style={{
+              padding: 20,
+              borderRadius: 0,
+              backgroundColor: bnReponse >= nbQuizz/2 ? "green" : "red",
+              color: "white",
+            }}
+          >
+            {`${bnReponse}  bonnes réponses sur ${nbQuizz} questions`}
+          </Card>
+        )}
+        {listquiz &&
+          Object.keys(listquiz).map((quizkey, key) => {
+            const quiz = listquiz[quizkey];
+            return (
+              <div key={key}>
+                {renderCard(quiz, key)}
+              </div>
+            );
+          })}
       </Stack>
-        {etat==0 &&
-            <Button variant="contained" color="primary" onClick={resultat}>
-                 Primary
-            </Button>
-        }
-     
+      {isLoadingListQuiz && <MatxLoading />}
+      {!showResult && !isLoadingListQuiz && (
+        <Button variant="contained" color="primary" onClick={getResultat}>
+          Valider
+        </Button>
+      )}
     </Container>
   );
 };

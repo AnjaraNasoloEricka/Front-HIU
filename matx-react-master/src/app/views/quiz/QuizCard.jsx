@@ -24,7 +24,7 @@ export default function QuizCard({ question, handleChange, index }) {
           <FormLabel component="legend"></FormLabel>
           <RadioGroup onChange={(e) => handleChange(e, index)}>
             {question?.choix.map((choix, index) => (
-              <FormControlLabel value={index} control={<Radio />} label={choix} />
+              <FormControlLabel key={index} value={index} control={<Radio />} label={choix} />
             ))}
           </RadioGroup>
         </FormControl>
