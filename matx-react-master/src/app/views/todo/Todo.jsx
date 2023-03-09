@@ -6,6 +6,8 @@ import {
   Checkbox,
   Container,
   Grid,
+  IconButton,
+  Icon,
 } from "@mui/material";
 import jwt from "jwt-decode";
 import Board, { moveCard } from "@lourenci/react-kanban";
@@ -29,7 +31,7 @@ const Todo = () => {
   const [isLoadingCheckTodo, setIsLoadingCheckTodo] = useState("");
   const [isLoadingNewTodo, setIsLoadingNewTodo] = useState(false);
   const [isLoadingDeleteTodo, setIsLoadingDeleteTodo] = useState("");
-  const [isLoadingUpdateTodo, setIsLoadingUpdateTodo] = useState("")
+  const [isLoadingUpdateTodo, setIsLoadingUpdateTodo] = useState("");
 
   function initializeTodo() {
     setIsLoadingTodo(true);
@@ -81,7 +83,7 @@ const Todo = () => {
       })
       .catch((error) => console.error(error))
       .finally(() => {
-        setIsLoadingCheckTodo('');
+        setIsLoadingCheckTodo("");
       });
   }
 
@@ -155,7 +157,7 @@ const Todo = () => {
   };
 
   const updateTodo = (newTodo) => {
-    setIsLoadingUpdateTodo(newTodo?._id)
+    setIsLoadingUpdateTodo(newTodo?._id);
     fetch(`${BASE_URL}/todo/${newTodo?._id}`, {
       method: "PUT",
       headers: {
@@ -163,23 +165,24 @@ const Todo = () => {
         "x-auth-token": TOKEN,
       },
       body: JSON.stringify({
-        tache: newTodo?.tache
+        tache: newTodo?.tache,
       }),
     })
       .then((response) => response.json())
       .then((data) => {
-        const updatedTodos = todo.map(singleTodo=>{
-          if(singleTodo._id === newTodo._id){
-            return newTodo
+        const updatedTodos = todo.map((singleTodo) => {
+          if (singleTodo._id === newTodo._id) {
+            return newTodo;
           }
-          return singleTodo
-        })
-        setTodo([...updatedTodos])
+          return singleTodo;
+        });
+        setTodo([...updatedTodos]);
       })
-      .catch((error) => console.error(error)).finally(()=>{
-        setIsLoadingUpdateTodo('')
-      })
-  }
+      .catch((error) => console.error(error))
+      .finally(() => {
+        setIsLoadingUpdateTodo("");
+      });
+  };
   return (
     <Container>
       <Box className="breadcrumb">
@@ -188,9 +191,6 @@ const Todo = () => {
           <Grid item md={6} sm={6} xs={6}>
             <Breadcrumb
               routeSegments={[{ name: "To do List", path: "/todo" }]}
-            />
-            <FormDialogAddTodo
-              addNewTodo={addNewTodo}
             />
           </Grid>
           <Grid item md={2} sm={2} xs={2}></Grid>
@@ -209,47 +209,83 @@ const Todo = () => {
       <Grid container spacing={3}>
         <Grid item md={6} sm={6} xs={6}>
           <Card title="To do List" style={{ width: "100%" }}>
-            <center>
-              <h4>A faire</h4>
-            </center>
+            <div
+              style={{
+                textAlign: "center",
+              }}
+            >
+              <h4
+                style={{
+                  display: "flex",
+                  textAlign: "center",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                A faire <FormDialogAddTodo addNewTodo={addNewTodo} />
+              </h4>
+            </div>
             {isLoadingTodo ? (
               <MatxLoading />
             ) : (
               <CardContent style={{ backgroundColor: "#212841" }}>
+                {todo.filter((singleTodo) => singleTodo.isDone === "no")
+                  .length <= 0 && (
+                  <p style={{ textAlign: "center", color: "white" }}>
+                    Aucune tache à faire pour le moment ...
+                  </p>
+                )}
                 {todo &&
                   todo
                     .filter((item) => item.isDone === "no")
                     .map((item) => (
                       <>
-                        <Card>
+                        <Card style={{ borderRadius: 0 }}>
                           <Grid container spacing={1}>
                             <Grid item md={1} sm={1} xs={1}></Grid>
                             <Grid item md={1} sm={1} xs={1}>
                               <h5></h5>
                             </Grid>
                             <Grid item md={8} sm={8} xs={8}>
-                              <h6 style={{ fontSize: "13px" }}>
-                                {item.tache}
-                                {isLoadingDeleteTodo === item._id || isLoadingUpdateTodo === item._id ? (
+                              <h6
+                                style={{
+                                  fontSize: "13px",
+                                  display: "flex",
+                                  justifyContent: "start",
+                                  alignItems: "center",
+                                }}
+                              >
+                                {/* Modification */}
+                                {isLoadingUpdateTodo === item._id ? (
                                   <MatxLoading />
                                 ) : (
-                                  <p>
-                                    <Grid container spacing={2}>
-                                      <Grid item md={4} sm={4} xs={4}>
-                                        <FormDialogUpdateTodo updateTodo={updateTodo} todo={item} />
-                                      </Grid>
-                                      <Grid item md={6} sm={6} xs={6}>
-                                        <Button
-                                          variant="outlined"
-                                          color="inherit"
-                                          style={{ color: "red" }}
-                                          onClick={() => deleteTodo(item)}
-                                        >
-                                          Supprimer
-                                        </Button>
-                                      </Grid>
-                                    </Grid>
-                                  </p>
+                                  <>
+                                    <FormDialogUpdateTodo
+                                      updateTodo={updateTodo}
+                                      todo={item}
+                                    />
+                                  </>
+                                )}
+                                {/* Suppression */}
+                                {isLoadingDeleteTodo === item._id ? (
+                                  <>
+                                    <MatxLoading />
+                                    <p style={{ textAlign: "center" }}>
+                                      Suppression en cours de la tache{" "}
+                                      {item.tache}
+                                    </p>
+                                  </>
+                                ) : (
+                                  <>
+                                    <IconButton
+                                      onClick={() => {
+                                        deleteTodo(item);
+                                      }}
+                                    >
+                                      <Icon color="error">deleteforever</Icon>
+                                    </IconButton>
+                                    {item.tache}
+                                  </>
                                 )}
                               </h6>
                             </Grid>
@@ -271,7 +307,16 @@ const Todo = () => {
                         <br />
                       </>
                     ))}
-                {isLoadingNewTodo ? <MatxLoading /> : <></>}
+                {isLoadingNewTodo ? (
+                  <>
+                    <MatxLoading />
+                    <p style={{ textAlign: "center", color: "white" }}>
+                      Ajout de tache en cours ...
+                    </p>
+                  </>
+                ) : (
+                  <></>
+                )}
               </CardContent>
             )}
           </Card>
@@ -279,18 +324,26 @@ const Todo = () => {
         <Grid item md={6} sm={6} xs={6}>
           <Card title="To do List" style={{ width: "100%" }}>
             <center>
-              <h4>Fait</h4>
+              <h4 style={{
+                padding: '7px 0px'
+              }}>Fait</h4>
             </center>
             {isLoadingTodo ? (
               <MatxLoading />
             ) : (
               <CardContent style={{ backgroundColor: "#212841" }}>
+                {todo.filter((singleTodo) => singleTodo.isDone === "yes")
+                  .length <= 0 && (
+                  <p style={{ textAlign: "center", color: "white" }}>
+                    Aucune tache terminée pour le moment ...
+                  </p>
+                )}
                 {todo &&
                   todo
                     .filter((item) => item.isDone !== "no")
                     .map((item) => (
                       <>
-                        <Card>
+                        <Card style={{ borderRadius: 0 }}>
                           <Grid container spacing={1}>
                             <Grid item md={1} sm={1} xs={1}></Grid>
                             <Grid item md={1} sm={1} xs={1}>
@@ -298,24 +351,26 @@ const Todo = () => {
                             </Grid>
                             <Grid item md={8} sm={8} xs={8}>
                               <h6 style={{ fontSize: "13px" }}>
-                                {item.tache}
-                                {/* <p>
-                                  <Grid container spacing={2}>
-                                    <Grid item md={4} sm={4} xs={4}>
-                                      <FormDialogUpdateTodo todo={item} />
-                                    </Grid>
-                                    <Grid item md={6} sm={6} xs={6}>
-                                      <Button
-                                        variant="outlined"
-                                        color="inherit"
-                                        style={{ color: "red" }}
-                                        onClick={() => deleteTodo(item)}
-                                      >
-                                        Supprimer
-                                      </Button>
-                                    </Grid>
-                                  </Grid>
-                                </p> */}
+                                {isLoadingDeleteTodo === item._id ? (
+                                  <>
+                                    <MatxLoading />
+                                    <p style={{ textAlign: "center" }}>
+                                      Suppression en cours de la tache{" "}
+                                      {item.tache}
+                                    </p>
+                                  </>
+                                ) : (
+                                  <>
+                                    <IconButton
+                                      onClick={() => {
+                                        deleteTodo(item);
+                                      }}
+                                    >
+                                      <Icon color="error">deleteforever</Icon>
+                                    </IconButton>
+                                    {item.tache}
+                                  </>
+                                )}
                               </h6>
                             </Grid>
                             <Grid item md={2} sm={2} xs={2}>

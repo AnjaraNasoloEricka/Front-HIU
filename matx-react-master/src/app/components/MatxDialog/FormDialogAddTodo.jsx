@@ -13,12 +13,12 @@ import { MatxLoading } from "..";
 
 export default function FormDialogAddTodo({ addNewTodo }) {
   const [open, setOpen] = useState(false);
-  const [task, setTask] = useState("")
+  const [task, setTask] = useState("");
 
   function AddToDo() {
-    setOpen(false)
+    setOpen(false);
     if (addNewTodo) {
-      console.log(task)
+      console.log(task);
       addNewTodo(task);
     }
   }
@@ -33,15 +33,9 @@ export default function FormDialogAddTodo({ addNewTodo }) {
 
   return (
     <Box>
-      <Button
-        variant="contained"
-        color="primary"
-        aria-label="Edit"
-        onClick={handleClickOpen}
-      >
-        Ajouter
+      <Button color="success" aria-label="Edit" onClick={handleClickOpen}>
+        <Icon>add_icon</Icon>
       </Button>
-
       <Dialog
         open={open}
         onClose={handleClose}
@@ -55,8 +49,8 @@ export default function FormDialogAddTodo({ addNewTodo }) {
             id="tache"
             label="Tâche"
             value={task}
-            onChange={(e)=>{
-              setTask(e.target.value)
+            onChange={(e) => {
+              setTask(e.target.value);
             }}
             type="text"
             fullWidth
