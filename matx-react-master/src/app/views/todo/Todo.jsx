@@ -7,6 +7,7 @@ import {
   Container,
   Grid,
 } from "@mui/material";
+import jwt from "jwt-decode";
 import Board, { moveCard } from "@lourenci/react-kanban";
 import "@lourenci/react-kanban/dist/styles.css";
 import { useEffect, useState } from "react";
@@ -25,7 +26,10 @@ import axios from "axios";
 const Todo = () => {
   const [todo, setTodo] = useState([]);
   const [isLoadingTodo, setIsLoadingTodo] = useState(false);
-  const navigate = useNavigate();
+  const [isLoadingCheckTodo, setIsLoadingCheckTodo] = useState("");
+  const [isLoadingNewTodo, setIsLoadingNewTodo] = useState(false);
+  const [isLoadingDeleteTodo, setIsLoadingDeleteTodo] = useState("");
+  const [isLoadingUpdateTodo, setIsLoadingUpdateTodo] = useState("")
 
   function initializeTodo() {
     setIsLoadingTodo(true);
@@ -38,6 +42,7 @@ const Todo = () => {
       })
       .then((e) => {
         const data = e.data;
+        // console.log(data);
         setTodo(data);
       })
       .catch((err) => {
@@ -49,7 +54,9 @@ const Todo = () => {
   }
 
   function changeCheck(task) {
-    fetch("https://mini-hiu-2023-api.vercel.app/todo/finir/" + task._id, {
+    setIsLoadingCheckTodo(task._id);
+    // https://mini-hiu-2023-api.vercel.app/todo/finir/
+    fetch(`${BASE_URL}/todo/finir/${task._id}`, {
       method: "PUT",
       headers: {
         "Content-Type": "application/json",
@@ -57,12 +64,31 @@ const Todo = () => {
       },
     })
       .then((response) => response.json())
-      .then((data) => navigate(0))
-      .catch((error) => console.error(error));
+      .then((data) => {
+        // console.log(data);
+        const newTodo = todo.map((singleTodo) => {
+          if (singleTodo._id === task._id) {
+            const newSingleTodo = {
+              ...singleTodo,
+              isDone: "yes",
+            };
+            return newSingleTodo;
+          } else {
+            return singleTodo;
+          }
+        });
+        setTodo([...newTodo]);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        setIsLoadingCheckTodo('');
+      });
   }
 
   const deleteTodo = (task) => {
-    fetch("https://mini-hiu-2023-api.vercel.app/todo/" + task._id, {
+    // https://mini-hiu-2023-api.vercel.app/todo/
+    setIsLoadingDeleteTodo(task._id);
+    fetch(`${BASE_URL}/todo/${task._id}`, {
       method: "DELETE",
       headers: {
         "Content-Type": "application/json",
@@ -73,14 +99,87 @@ const Todo = () => {
       }),
     })
       .then((response) => response.json())
-      .then((data) => navigate(0))
-      .catch((error) => console.error(error));
+      .then((data) => {
+        const newTodo = todo.filter((singleTodo) => {
+          return singleTodo._id !== task._id;
+        });
+        setTodo([...newTodo]);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        setIsLoadingDeleteTodo("");
+      });
   };
 
   useEffect(() => {
     initializeTodo();
   }, []);
 
+  const addNewTodo = (todoToAdd) => {
+    // setIsLoadingCheckTodo()
+    setIsLoadingNewTodo(true);
+    fetch(`${BASE_URL}/todo`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": TOKEN,
+      },
+      body: JSON.stringify({
+        tache: todoToAdd,
+      }),
+    })
+      .then((response) => response.json())
+      .then((resp) => {
+        const userToken = TOKEN;
+        const user = jwt(userToken);
+        // console.log(user);
+        const idInserted = resp?.program?.insertedId;
+        const dateToday = new Date();
+        const isDone = "no";
+        const tache = todoToAdd;
+        const newTodoObj = {
+          data_today: dateToday,
+          isDone: isDone,
+          tache: tache,
+          _id: idInserted,
+          etudiantId: user.id,
+        };
+
+        const newTodo = [...todo, { ...newTodoObj }];
+        setTodo(newTodo);
+      })
+      .catch((error) => console.error(error))
+      .finally(() => {
+        setIsLoadingNewTodo(false);
+      });
+  };
+
+  const updateTodo = (newTodo) => {
+    setIsLoadingUpdateTodo(newTodo?._id)
+    fetch(`${BASE_URL}/todo/${newTodo?._id}`, {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        "x-auth-token": TOKEN,
+      },
+      body: JSON.stringify({
+        tache: newTodo?.tache
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        const updatedTodos = todo.map(singleTodo=>{
+          if(singleTodo._id === newTodo._id){
+            return newTodo
+          }
+          return singleTodo
+        })
+        setTodo([...updatedTodos])
+      })
+      .catch((error) => console.error(error)).finally(()=>{
+        setIsLoadingUpdateTodo('')
+      })
+  }
   return (
     <Container>
       <Box className="breadcrumb">
@@ -90,7 +189,9 @@ const Todo = () => {
             <Breadcrumb
               routeSegments={[{ name: "To do List", path: "/todo" }]}
             />
-            <FormDialogAddTodo initializeTodo={initializeTodo} />
+            <FormDialogAddTodo
+              addNewTodo={addNewTodo}
+            />
           </Grid>
           <Grid item md={2} sm={2} xs={2}></Grid>
           <Grid item md={4} sm={4} xs={4}>
@@ -129,32 +230,40 @@ const Todo = () => {
                             <Grid item md={8} sm={8} xs={8}>
                               <h6 style={{ fontSize: "13px" }}>
                                 {item.tache}
-                                <p>
-                                  <Grid container spacing={2}>
-                                    <Grid item md={4} sm={4} xs={4}>
-                                      <FormDialogUpdateTodo todo={item} />
+                                {isLoadingDeleteTodo === item._id || isLoadingUpdateTodo === item._id ? (
+                                  <MatxLoading />
+                                ) : (
+                                  <p>
+                                    <Grid container spacing={2}>
+                                      <Grid item md={4} sm={4} xs={4}>
+                                        <FormDialogUpdateTodo updateTodo={updateTodo} todo={item} />
+                                      </Grid>
+                                      <Grid item md={6} sm={6} xs={6}>
+                                        <Button
+                                          variant="outlined"
+                                          color="inherit"
+                                          style={{ color: "red" }}
+                                          onClick={() => deleteTodo(item)}
+                                        >
+                                          Supprimer
+                                        </Button>
+                                      </Grid>
                                     </Grid>
-                                    <Grid item md={6} sm={6} xs={6}>
-                                      <Button
-                                        variant="outlined"
-                                        color="inherit"
-                                        style={{ color: "red" }}
-                                        onClick={() => deleteTodo(item)}
-                                      >
-                                        Supprimer
-                                      </Button>
-                                    </Grid>
-                                  </Grid>
-                                </p>
+                                  </p>
+                                )}
                               </h6>
                             </Grid>
                             <Grid item md={2} sm={2} xs={2}>
                               <h5>
-                                <Checkbox
-                                  color="primary"
-                                  value="checkedG"
-                                  onChange={() => changeCheck(item)}
-                                />
+                                {isLoadingCheckTodo === item._id ? (
+                                  <MatxLoading />
+                                ) : (
+                                  <Checkbox
+                                    color="primary"
+                                    value="checkedG"
+                                    onChange={() => changeCheck(item)}
+                                  />
+                                )}
                               </h5>
                             </Grid>
                           </Grid>
@@ -162,6 +271,7 @@ const Todo = () => {
                         <br />
                       </>
                     ))}
+                {isLoadingNewTodo ? <MatxLoading /> : <></>}
               </CardContent>
             )}
           </Card>
@@ -189,7 +299,7 @@ const Todo = () => {
                             <Grid item md={8} sm={8} xs={8}>
                               <h6 style={{ fontSize: "13px" }}>
                                 {item.tache}
-                                <p>
+                                {/* <p>
                                   <Grid container spacing={2}>
                                     <Grid item md={4} sm={4} xs={4}>
                                       <FormDialogUpdateTodo todo={item} />
@@ -205,7 +315,7 @@ const Todo = () => {
                                       </Button>
                                     </Grid>
                                   </Grid>
-                                </p>
+                                </p> */}
                               </h6>
                             </Grid>
                             <Grid item md={2} sm={2} xs={2}>

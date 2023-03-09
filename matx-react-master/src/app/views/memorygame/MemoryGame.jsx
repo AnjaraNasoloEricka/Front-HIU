@@ -20,11 +20,10 @@ const MemoryGame=()=>{
                 setTimer(timer - 1);
                 let minutes = Math.floor(timer / 60);
                 let secondes = timer % 60;
-                setTempsRestant(minutes + ":" + (secondes < 10 ? "0" : "") + secondes);
-                
+                const tempsRestant = minutes + ":" + (secondes < 10 ? "0" : "") + secondes
+                setTempsRestant(tempsRestant);
             }
             else{
-                console.log("tapitra");
                 setMycomponent(
                     <Alert sx={{ m: 1 }} severity="danger" variant="filled">
                         Vous n'avez plus de temps pour jouer
@@ -44,7 +43,6 @@ const MemoryGame=()=>{
     useEffect(() => {
         const myTimeout =setTimeout(() => {
                 handleTimer();
-                
          }, 1000); 
     }, [timer]);
 
@@ -55,7 +53,7 @@ const MemoryGame=()=>{
             <Card>
                 <center><h1>Jeu de Mémoire</h1></center>
                 <center>Ce jeu est spécialement fait pour ceux qui ont besoin de travailler leur mémoire.Vous ne pourrez jouer que pendant 15 minutes afin d'eviter votre addiction car notre plateforme est à but éducatif.</center>
-                <center><h4>Temps restant :{tempsRestant}</h4></center>
+                <center><h4>Temps restant : {tempsRestant}</h4></center>
                 <CardContent>
                     {mycomponent}
                 </CardContent>

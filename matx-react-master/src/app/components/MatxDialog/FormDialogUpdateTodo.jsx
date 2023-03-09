@@ -11,39 +11,25 @@ import DialogTitle from '@mui/material/DialogTitle';
 import TextField from '@mui/material/TextField';
 import { TOKEN } from "app/config";
 import React, { useRef } from 'react';
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-const FormDialogUpdateTodo=({todo}) =>{
+const FormDialogUpdateTodo=({todo , updateTodo}) =>{
   const [open, setOpen] = React.useState(false);
-  const task=useRef(todo?.tache);
-  const navigate=useNavigate();
+  const [task, setTask] = useState(todo)
 
   useEffect(()=>{
-        console.log("huhu"+todo?.tache);
-  },[])
+    setTask(todo)
+  },[todo])
 
-  function finishTodo(){
-      setOpen(false);
-      navigate(0);
+  const handleUpdateTodo = () => {
+    setOpen(false)
+    // console.log(task)
+    if(updateTodo){
+      updateTodo(task)
+    }
   }
   
-  function updateTodo(){
-    fetch('https://mini-hiu-2023-api.vercel.app/todo/'+todo._id, {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-          'x-auth-token': TOKEN
-        },
-        body: JSON.stringify({
-        tache: task.current.value
-       })
-      })
-      .then(response => response.json())
-      .then(data => finishTodo())
-      .catch(error => console.error(error))
-  }
-
   function handleClickOpen() {
     setOpen(true);
   }
@@ -66,14 +52,18 @@ const FormDialogUpdateTodo=({todo}) =>{
             margin="dense"
             id="tache"
             label="Tâche"
-            inputRef={task}
-            defaultValue={todo?.tache}
+            value={task.tache}
+            // defaultValue={todo?.tache}
+            onChange={(e)=>setTask({
+              ...task,
+              tache: e.target.value
+            })}
             type="text"
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-            <Button variant="outlined" onClick={updateTodo} color="secondary">
+            <Button variant="outlined" onClick={()=> handleUpdateTodo()} color="secondary">
                 Sauvegarder
             </Button>
           <Button onClick={handleClose} color="primary">

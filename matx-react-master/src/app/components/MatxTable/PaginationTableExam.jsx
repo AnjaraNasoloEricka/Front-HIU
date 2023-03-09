@@ -18,6 +18,7 @@ import "moment/locale/fr";
 import moment from "moment";
 import { deleteExam } from "app/apis/examApi";
 import { MatxLoading } from "..";
+import { useNavigate } from "react-router-dom";
 
 const StyledTable = styled(Table)(() => ({
   whiteSpace: "pre",
@@ -30,6 +31,7 @@ const StyledTable = styled(Table)(() => ({
 }));
 
 const PaginationTableExam = ({ examlist, initializeExamsList }) => {
+  const navigate = useNavigate();
   const dateNowFormated = moment(new Date())
     .utc(0)
     .format("YYYY-MM-DD HH:mm:ss");
@@ -152,7 +154,11 @@ const PaginationTableExam = ({ examlist, initializeExamsList }) => {
                     </IconButton>
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        navigate(`/quizz/${exam._id}`);
+                      }}
+                    >
                       <Icon color="secondary">insights</Icon>
                     </IconButton>
                   </TableCell>

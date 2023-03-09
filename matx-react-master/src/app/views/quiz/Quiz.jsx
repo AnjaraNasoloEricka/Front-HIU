@@ -4,6 +4,8 @@ import { Breadcrumb, MatxLoading, SimpleCard } from "app/components";
 import { useEffect, useRef, useState } from "react";
 import QuizCard from "./QuizCard";
 import ResultQuiz from "./ResultQuiz";
+import {useParams} from "react-router-dom"
+import { BASE_URL, TOKEN } from "app/config";
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -18,9 +20,6 @@ const StyledButton = styled(Button)(({ theme }) => ({
   margin: theme.spacing(1),
 }));
 
-const token =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY0MDYzOTYwYzJmNzMyZGE1N2Q0OTg3OCIsImlhdCI6MTY3ODI3NDkxNywiZXhwIjoxNjc4MzYxMzE3fQ.0bG52277kyMKk0VIHFi4vkt4twBuMFr2rUFB0oamS6c";
-const url = "https://mini-hiu-2023-api.vercel.app/level-test/generate";
 
 const Quiz = () => {
   const [isLoadingListQuiz, setIsLoadingListQuiz] = useState(true);
@@ -29,6 +28,8 @@ const Quiz = () => {
   const [nbQuizz, setNbQuiz] = useState(0);
   const [bnReponse, setBnReponse] = useState(0);
   const [listquiz, setListQuiz] = useState([]);
+  // const {examId} = useParams()
+  // console.log(examId)
 
   const initializeQuizList = () => {
     setIsLoadingListQuiz(true);
@@ -36,7 +37,7 @@ const Quiz = () => {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        "x-auth-token": token,
+        "x-auth-token": TOKEN,
       },
       body: JSON.stringify({
         subject: "mathematique",
@@ -44,7 +45,7 @@ const Quiz = () => {
       }),
     };
 
-    fetch(url, options)
+    fetch(`${BASE_URL}/level-test/generate`, options)
       .then((response) => response.json())
       .then((data) => {
         const datasList = data.datas;

@@ -6,7 +6,7 @@ import PuzzleGame from "./PuzzleGame";
 
 const MemoryGame=()=>{
    const[open,setOpen]=useState(true);
-   const [timer, setTimer] = useState(5);
+   const [timer, setTimer] = useState(900);
    const [mycomponent, setMycomponent] = useState(<PuzzleGame />);
     const [tempsRestant,setTempsRestant] = useState();
     const[message,setMessage]=useState();
@@ -56,7 +56,7 @@ const MemoryGame=()=>{
             <Card>
                 <center><h1>Jeu de taquin</h1></center>
                 <center>Ce jeu est spécialement fait pour ceux qui ont besoin de travailler leur logique.Vous ne pourrez jouer que pendant 15 minutes afin d'eviter votre addiction car notre plateforme est à but éducatif.</center>
-                <center><h4>Temps restant :{tempsRestant}</h4></center>
+                <center><h4>Temps restant : {tempsRestant}</h4></center>
                 <CardContent>
                     {mycomponent}
                 </CardContent>

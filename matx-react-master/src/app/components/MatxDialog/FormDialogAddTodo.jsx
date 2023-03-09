@@ -11,38 +11,16 @@ import React, { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { MatxLoading } from "..";
 
-export default function FormDialogAddTodo({ initializeTodo }) {
+export default function FormDialogAddTodo({ addNewTodo }) {
   const [open, setOpen] = useState(false);
-  const task = useRef();
-  const navigate = useNavigate();
-  const [isLoadingAddTodo, setIsLoadingAddTodo] = useState(false);
+  const [task, setTask] = useState("")
 
-  function finishTodo() {
-    setOpen(false);
-    if (initializeTodo) {
-      initializeTodo();
-    } else {
-      navigate(0);
-    }
-  }
   function AddToDo() {
-    setIsLoadingAddTodo(true);
-    fetch("https://mini-hiu-2023-api.vercel.app/todo", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        "x-auth-token": TOKEN,
-      },
-      body: JSON.stringify({
-        tache: task.current.value,
-      }),
-    })
-      .then((response) => response.json())
-      .then((data) => finishTodo())
-      .catch((error) => console.error(error))
-      .finally(() => {
-        setIsLoadingAddTodo(false);
-      });
+    setOpen(false)
+    if (addNewTodo) {
+      console.log(task)
+      addNewTodo(task);
+    }
   }
 
   function handleClickOpen() {
@@ -76,24 +54,23 @@ export default function FormDialogAddTodo({ initializeTodo }) {
             margin="dense"
             id="tache"
             label="Tâche"
-            inputRef={task}
+            value={task}
+            onChange={(e)=>{
+              setTask(e.target.value)
+            }}
             type="text"
             fullWidth
           />
         </DialogContent>
         <DialogActions>
-          {isLoadingAddTodo ? (
-            <MatxLoading />
-          ) : (
-            <>
-              <Button variant="outlined" onClick={AddToDo} color="secondary">
-                Sauvegarder
-              </Button>
-              <Button onClick={handleClose} color="primary">
-                Quitter
-              </Button>
-            </>
-          )}
+          <>
+            <Button variant="outlined" onClick={AddToDo} color="secondary">
+              Sauvegarder
+            </Button>
+            <Button onClick={handleClose} color="primary">
+              Quitter
+            </Button>
+          </>
         </DialogActions>
       </Dialog>
     </Box>

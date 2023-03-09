@@ -20,6 +20,7 @@ export const navigations = [
     icon: "games",
     children: [
       { name: "Jeu de memoire | Carte", icon: "psychology", path: "/memorygame" },
+      { name: "Jeu de taquin", icon: "psychology", path: "/puzzlegame" },
       // { name: "Sign up", iconText: "SU", path: "/session/signup" },
     ],
   },
