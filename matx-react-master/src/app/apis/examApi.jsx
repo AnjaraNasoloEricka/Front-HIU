@@ -10,7 +10,15 @@ export const getExamList = async () => {
   });
   return request.data;
 };
-
+export const getExamDetails = async (examId) => {
+  const request = await axios.get(`${BASE_URL}/exam/${examId}`, {
+    headers: {
+      "Content-Type": "application/json",
+      "x-auth-token": TOKEN,
+    },
+  });
+  return request.data;
+};
 export const addExam = async (newExam) => {
   const data = {
     ...newExam,
@@ -58,3 +66,4 @@ export const deleteExam = async (examId) => {
   });
   return request;
 };
+
