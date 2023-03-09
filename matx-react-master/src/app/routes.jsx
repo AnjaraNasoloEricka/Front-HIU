@@ -13,6 +13,7 @@ import PublicationsRouter from './views/publications/PublicationsRouter';
 import CommentairesRouter from './views/commentaires/CommentairesRouter';
 import suggestionRoutes from './views/suggestion/SuggestionRoutes';
 import QuizRouter from './views/quiz/QuizRouter';
+import memorygameRouter from './views/memorygame/MemoryGameRoute';
 
 const routes = [
   {
@@ -21,7 +22,7 @@ const routes = [
         <MatxLayout />
       // </AuthGuard>
     ),
-    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter, ...PublicationsRouter, ...CommentairesRouter, ...suggestionRoutes,...QuizRouter],
+    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter, ...PublicationsRouter, ...CommentairesRouter, ...suggestionRoutes,...QuizRouter,...memorygameRouter],
     // children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter,...suggestionRoutes],
   },
   ...sessionRoutes,
