@@ -7,7 +7,9 @@ import './Card.css'
 const HIDDEN_SYMBOL = '❓'
 
 const Card = ({card, index, feedback, onClick}) => (
-    <div className={`card ${feedback}`} onClick={() => onClick(index)}>
+    <div style={{
+        cursor: 'pointer'
+    }} className={`card ${feedback}`} onClick={() => onClick(index)}>
         {feedback === 'hidden'? HIDDEN_SYMBOL : card}
     </div>
 )
