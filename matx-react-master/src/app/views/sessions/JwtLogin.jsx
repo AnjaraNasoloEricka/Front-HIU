@@ -8,6 +8,8 @@ import { Formik } from "formik";
 import { useEffect, useState } from "react";
 import { NavLink, useNavigate } from "react-router-dom";
 import * as Yup from "yup";
+import axios from "axios";
+import { BASE_URL, TOKEN } from "app/config";
 
 const FlexBox = styled(Box)(() => ({ display: "flex", alignItems: "center" }));
 
@@ -51,7 +53,7 @@ const JwtLogin = () => {
   const [passwordState, setPasswordState] = useState("Password@123");
 
   const login = async (email, password) => {
-    setFeedback("")
+    setFeedback("");
     setLoading(true);
     const loginData = {
       email,
@@ -63,7 +65,28 @@ const JwtLogin = () => {
         const token = data.token;
         if (token) {
           localStorage.setItem("accessToken", token);
-          window.location = "/";
+          axios
+            .post(
+              `${BASE_URL}/notification/saveTokenDevice`,
+              {
+                'token': localStorage.getItem("clientToken"),
+              },
+              {
+                headers: {
+                  "Content-Type": "application/json",
+                  "x-auth-token": TOKEN,
+                },
+              }
+            )
+            .then((resp) => {
+              console.log(resp)
+            })
+            .catch((err) => {
+              console.error(err);
+            })
+            .finally(() => {
+              window.location = "/";
+            });
         }
       })
       .catch((err) => {
@@ -75,13 +98,13 @@ const JwtLogin = () => {
       });
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     // if(feedback){
     //   setTimeout(()=>{
     //     setFeedback("")
     //   },2000)
     // }
-  },[feedback])
+  }, [feedback]);
   return (
     <JWTRoot>
       <Card className="card">
