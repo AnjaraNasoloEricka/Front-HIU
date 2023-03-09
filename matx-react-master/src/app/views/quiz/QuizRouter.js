@@ -5,7 +5,7 @@ import { authRoles } from '../../auth/authRoles';
 const Quiz = Loadable(lazy(() => import('./Quiz')));
 
 const QuizRouter = [
-  { path: '/quizz/:examId', element: <Quiz />, auth: authRoles.admin },
+  { path: '/exams/:examId/quizz/', element: <Quiz />, auth: authRoles.admin },
 ];
 
 export default QuizRouter;

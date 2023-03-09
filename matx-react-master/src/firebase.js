@@ -23,7 +23,7 @@ export const getTokenCode = (setTokenFound) => {
   return getToken(messaging, { vapidKey: `${vapidKey1}${vapidKey2}` })
     .then((currentToken) => {
       if (currentToken) {
-        console.log("current token for client: ", currentToken);
+        // console.log("current token for client: ", currentToken);
         localStorage.setItem("clientToken", currentToken)
         setTokenFound(true);
       } else {

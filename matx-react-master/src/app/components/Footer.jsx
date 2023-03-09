@@ -3,6 +3,7 @@ import { styled, useTheme } from '@mui/system';
 import useSettings from 'app/hooks/useSettings';
 import { topBarHeight } from 'app/utils/constant';
 import { Paragraph, Span } from './Typography';
+import { PROJECT_NAME } from 'app/config';
 
 const AppFooter = styled(Toolbar)(() => ({
   display: 'flex',
@@ -41,7 +42,7 @@ const Footer = () => {
         <AppFooter>
           <FooterContent>
             <Button variant="contained" color="secondary">
-              Copyright 2023 6-out
+              Copyright 2023 {PROJECT_NAME}
             </Button>
             <Span sx={{ m: 'auto' }}></Span>
             <Paragraph sx={{ m: 0 }}>Design and Developed by a cat</Paragraph>

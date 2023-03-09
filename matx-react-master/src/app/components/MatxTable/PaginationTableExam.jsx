@@ -149,14 +149,18 @@ const PaginationTableExam = ({ examlist, initializeExamsList }) => {
                     />
                   </TableCell>
                   <TableCell align="center">
-                    <IconButton>
+                    <IconButton
+                      onClick={() => {
+                        window.open(`/exams/${exam._id}/lessons/`, "_blank");
+                      }}
+                    >
                       <Icon color="info">preview</Icon>
                     </IconButton>
                   </TableCell>
                   <TableCell align="center">
                     <IconButton
                       onClick={() => {
-                        navigate(`/quizz/${exam._id}`);
+                        window.open(`/exams/${exam._id}/quizz/`, "_blank");
                       }}
                     >
                       <Icon color="secondary">insights</Icon>
