@@ -169,7 +169,7 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
           </TableRow>
         </TableBody>
       </StyledTable>
-
+{/* 
       <TablePagination
         sx={{ px: 2 }}
         page={page}
@@ -181,7 +181,7 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         nextIconButtonProps={{ "aria-label": "Suivante" }}
         backIconButtonProps={{ "aria-label": "Précédente" }}
-      />
+      /> */}
     </Box>
   );
 };
