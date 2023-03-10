@@ -1,8 +1,9 @@
-import { Breadcrumb, Container } from "react-bootstrap";
-import { Box, Breadcrumbs, Button, Icon, IconButton, Stack, styled } from "@mui/material";
+import { Breadcrumb } from "react-bootstrap";
+import { Box, Breadcrumbs, Button, Grid, Icon, IconButton, Stack, styled } from "@mui/material";
 import React from "react";
 import { SimpleCard } from "app/components";
 import PaginationTableCloud from "app/components/MatxTable/PaginationTableCloud";
+import FormDialogCloud from "app/components/MatxDialog/FormDialogCloud";
 
 const clouddata=[
     {
@@ -76,12 +77,27 @@ const clouddata=[
     }
 ];
 
+const Container = styled("div")(({ theme }) => ({
+    margin: "30px",
+    [theme.breakpoints.down("sm")]: { margin: "16px" },
+    "& .breadcrumb": {
+      marginBottom: "30px",
+      [theme.breakpoints.down("sm")]: { marginBottom: "16px" },
+    },
+  }));
 
 const CloudDirectory=()=>{
     return (
         <Container>
             <Box className="breadcrumb">
-                <Breadcrumb routeSegments={[{ name: "Cloud", path: "/cloud" }]} />
+                <Grid container spacing={3}>
+                    <Grid item lg={10} md={10} sm={10} xs={10}>
+                        <Breadcrumb routeSegments={[{ name: "Cloud", path: "/cloud" }]} />
+                    </Grid>
+                    <Grid item lg={2} md={2} sm={2} xs={2}>
+                        <FormDialogCloud alldossier={clouddata}/>
+                    </Grid>
+                </Grid>
             </Box>
         <SimpleCard title="Espace Cloud">
             <PaginationTableCloud alldirectory={clouddata}/>
