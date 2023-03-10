@@ -1,5 +1,9 @@
 export const navigations = [
+<<<<<<< HEAD
   { name: 'Dashboard', path: '/dashboard/default', icon: 'dashboard' },
+=======
+  { name: 'Accueil', path: '/dashboard/default', icon: 'dashboard' },
+>>>>>>> a7435640c7ec20e4d703375810724ceaa0bd7052
   { name: "Emploi du temps", path: "/program", icon: "eventnote" },
   { name: "Todo", path: "/todo", icon: "article" },
   { name: "Examen", path: "/exams", icon: "create" },

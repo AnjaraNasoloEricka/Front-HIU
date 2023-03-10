@@ -15,6 +15,7 @@ import suggestionRoutes from './views/suggestion/SuggestionRoutes';
 import QuizRouter from './views/quiz/QuizRouter';
 import memorygameRouter from './views/memorygame/MemoryGameRoute';
 import LessonsRouter from './views/lessons/LessonsRouter';
+import cloudRouter from './views/cloud/CloudRouter';
 
 const routes = [
   {
@@ -23,7 +24,7 @@ const routes = [
         <MatxLayout />
       // </AuthGuard>
     ),
-    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter, ...PublicationsRouter, ...CommentairesRouter, ...suggestionRoutes,...QuizRouter,...memorygameRouter, ...LessonsRouter],
+    children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter, ...PublicationsRouter, ...CommentairesRouter, ...suggestionRoutes,...QuizRouter,...memorygameRouter, ...LessonsRouter,...cloudRouter],
     // children: [...dashboardRoutes, ...chartsRoute, ...materialRoutes,...programsRouter,...ExamsRouter,...todoRouter,...suggestionRoutes],
   },
   ...sessionRoutes,

@@ -52,7 +52,7 @@ export default function FormDialogAddAndModifyProgram({
     };
     addProgram(programToAdd)
       .then((e) => {
-        setSuccess("Emploie du temps ajouté avec succès");
+        setSuccess("Emploi du temps ajouté avec succès");
       })
       .catch((err) => {
         if (err.request.response) {
