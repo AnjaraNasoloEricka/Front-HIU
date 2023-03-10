@@ -42,6 +42,7 @@ const Program = () => {
   useEffect(() => {
     initializeProgramList();
   }, []);
+
   return (
     <div>
       <Container>
@@ -50,7 +51,6 @@ const Program = () => {
             routeSegments={[{ name: "Programme", path: "/programme" }]}
           />
         </Box>
-
         <SimpleCard title="Mon Emploi du temps">
           {isLoading ? (
             <Loading />

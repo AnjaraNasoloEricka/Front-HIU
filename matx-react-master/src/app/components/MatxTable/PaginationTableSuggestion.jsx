@@ -8,10 +8,10 @@ import {
   TableHead,
   TableRow,
 } from "@mui/material";
-import { deleteProgram } from "app/apis/programApi";
-import { useEffect, useState } from "react";
-import { MatxLoading } from "..";
-import FormDialogAddAndModifyProgram from "../MatxDialog/FormDialogProgram/FormDialogAddAndModifyProgram";
+// import { deleteProgram } from "app/apis/programApi";
+// import { useEffect, useState } from "react";
+// import { MatxLoading } from "..";
+// import FormDialogAddAndModifyProgram from "../MatxDialog/FormDialogProgram/FormDialogAddAndModifyProgram";
 
 const StyledTable = styled(Table)(() => ({
   whiteSpace: "pre",

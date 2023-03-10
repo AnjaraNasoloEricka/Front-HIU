@@ -56,6 +56,18 @@ const Todo = () => {
   }
 
   function changeCheck(task) {
+    const newTodo = todo.map((singleTodo) => {
+      if (singleTodo._id === task._id) {
+        const newSingleTodo = {
+          ...singleTodo,
+          isDone: "yes",
+        };
+        return newSingleTodo;
+      } else {
+        return singleTodo;
+      }
+    });
+    setTodo([...newTodo]);
     setIsLoadingCheckTodo(task._id);
     // https://mini-hiu-2023-api.vercel.app/todo/finir/
     fetch(`${BASE_URL}/todo/finir/${task._id}`, {
@@ -68,18 +80,6 @@ const Todo = () => {
       .then((response) => response.json())
       .then((data) => {
         // console.log(data);
-        const newTodo = todo.map((singleTodo) => {
-          if (singleTodo._id === task._id) {
-            const newSingleTodo = {
-              ...singleTodo,
-              isDone: "yes",
-            };
-            return newSingleTodo;
-          } else {
-            return singleTodo;
-          }
-        });
-        setTodo([...newTodo]);
       })
       .catch((error) => console.error(error))
       .finally(() => {
@@ -146,7 +146,6 @@ const Todo = () => {
           _id: idInserted,
           etudiantId: user.id,
         };
-
         const newTodo = [...todo, { ...newTodoObj }];
         setTodo(newTodo);
       })
@@ -324,9 +323,13 @@ const Todo = () => {
         <Grid item md={6} sm={6} xs={6}>
           <Card title="To do List" style={{ width: "100%" }}>
             <center>
-              <h4 style={{
-                padding: '7px 0px'
-              }}>Fait</h4>
+              <h4
+                style={{
+                  padding: "7px 0px",
+                }}
+              >
+                Fait
+              </h4>
             </center>
             {isLoadingTodo ? (
               <MatxLoading />

@@ -5,7 +5,7 @@ import { authRoles } from '../../auth/authRoles';
 const Commentaires = Loadable(lazy(() => import('./Commentaires')));
 
 const CommentairesRouter = [
-  { path: '/commentaires', element: <Commentaires />, auth: authRoles.admin },
+  { path: '/forum/:forumId/commentaires', element: <Commentaires />, auth: authRoles.admin },
 ];
 
 export default CommentairesRouter;

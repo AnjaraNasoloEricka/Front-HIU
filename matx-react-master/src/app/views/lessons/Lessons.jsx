@@ -1,10 +1,7 @@
-import { Box, styled, Icon } from "@mui/material";
+import { Box, styled, Icon, Button, CircularProgress } from "@mui/material";
 import { getExamDetails } from "app/apis/examApi";
 import { Breadcrumb, MatxLoading, SimpleCard } from "app/components";
-import PaginationTableExam from "app/components/MatxTable/PaginationTableExam";
-import PaginationTablePublication from "app/components/MatxTable/PaginationTablePublication";
 import { BASE_URL, TOKEN } from "app/config";
-import Card from "app/gamecomponent/Card";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 
@@ -73,6 +70,35 @@ const Lessons = () => {
             ]}
           />
         </Box>
+        <div>
+          <Button
+            color="warning"
+            variant="outlined"
+            style={{
+              marginBottom: 10
+            }}
+            onClick={() => {
+              if(!isLoadingLessonsList){
+                initializeLessonsList();
+              }
+            }}
+          >
+            {isLoadingLessonsList ? (
+              <CircularProgress size={20} color="warning" />
+            ) : (
+              <>
+                <Icon
+                  style={{
+                    marginRight: 10,
+                  }}
+                >
+                  language
+                </Icon>{" "}
+                Rafraichir
+              </>
+            )}
+          </Button>
+        </div>
         <SimpleCard title="">
           {isLoadingLessonsList ? (
             <>
@@ -92,7 +118,8 @@ const Lessons = () => {
                           alignItems: "center",
                         }}
                       >
-                        <Icon style={{marginRight: 20}}>language</Icon> {lesson?.lessonTitle}
+                        <Icon style={{ marginRight: 20 }}>language</Icon>{" "}
+                        {lesson?.lessonTitle}
                       </h3>
                       <div style={{ marginLeft: 50 }}>
                         <h4 style={{ color: "grey" }}>Sites webs suggérés</h4>
