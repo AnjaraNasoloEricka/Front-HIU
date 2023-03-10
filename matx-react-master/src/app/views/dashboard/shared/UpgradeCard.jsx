@@ -30,17 +30,9 @@ const UpgradeCard = () => {
         <img src="/assets/images/illustrations/upgrade.svg" alt="upgrade" />
 
         <Paragraph>
-          Upgrade to <b>MatX PRO</b> for <br /> more resources
+          Etudier sur <b>Study-Hub</b> pour <br /> monter en flèche vos résultats scolaires
         </Paragraph>
 
-        <Button
-          size="large"
-          color="primary"
-          variant="contained"
-          sx={{ textTransform: 'uppercase' }}
-        >
-          upgrade now
-        </Button>
       </StyledCard>
     </CardRoot>
   );
