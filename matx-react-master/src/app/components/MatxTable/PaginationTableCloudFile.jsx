@@ -5,6 +5,7 @@ import { SimpleCard } from "..";
 import "firebase/storage";
 import ReactLoading from "react-loading";
 import { useState } from "react";
+import { getStorage, ref, getDownloadURL } from "firebase/storage";
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -19,14 +20,30 @@ const PaginationTableCloudFile = ({ allfile }) => {
   const [isDownloading, setIsDownloading] = useState(false);
   const handleDownload = async (fileUrl, fileName) => {
     setIsDownloading(true);
-    // const response = await fetch(fileUrl);
-    // const blob = await response.blob();
-    // const url = window.URL.createObjectURL(blob);
-    // const a = document.createElement(`a`);
-    // a.href = fileUrl;
-    // a.download = fileName;
-    // a.click();
-    // setIsDownloading(false);
+    const storage = getStorage();
+    getDownloadURL(ref(storage, fileUrl))
+      .then((url) => {
+        // `url` is the download URL for 'images/stars.jpg'
+
+        // This can be downloaded directly:
+        const xhr = new XMLHttpRequest();
+        xhr.responseType = "blob";
+        xhr.onload = (event) => {
+          const blob = xhr.response;
+        };
+        xhr.open("GET", url);
+        xhr.send();
+
+        // Or inserted into an <img> element
+        const img = document.getElementById("myimg");
+        img.setAttribute("src", url);
+      })
+      .catch((error) => {
+        // Handle any errors
+      })
+      .finally(() => {
+        setIsDownloading(false);
+      });
   };
 
   return (
@@ -48,6 +65,7 @@ const PaginationTableCloudFile = ({ allfile }) => {
                   </p>
                 </Grid>
                 <Grid item lg={3} md={3} sm={3} xs={3}>
+                  <a href={`${file.lien}`} target={`_blank`} download>
                   <h3>
                     <Button
                       color="success"
@@ -55,7 +73,7 @@ const PaginationTableCloudFile = ({ allfile }) => {
                       variant="outlined"
                       disabled={isDownloading}
                       onClick={() => {
-                        handleDownload(`${file.lien}`, file.nom);
+                        // handleDownload(`${file.lien}`, file.nom);
                       }}
                     >
                       {isDownloading ? (
@@ -70,6 +88,7 @@ const PaginationTableCloudFile = ({ allfile }) => {
                       )}
                     </Button>
                   </h3>
+                  </a>
                 </Grid>
               </Grid>
             </SimpleCard>

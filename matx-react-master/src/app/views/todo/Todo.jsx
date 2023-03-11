@@ -19,6 +19,7 @@ import { Link } from "react-router-dom";
 import FormDialogUpdateTodo from "app/components/MatxDialog/FormDialogUpdateTodo";
 import { BASE_URL, TOKEN } from "app/config";
 import axios from "axios";
+import illustration from "../../../images/illustrations/photos/todo_list.png"
 
 const Todo = () => {
   const [todo, setTodo] = useState([]);
@@ -200,9 +201,27 @@ const Todo = () => {
         </Grid>
         <br />
       </Box>
+      <div
+        style={{
+          width: "100%",
+        }}
+      >
+        <center>
+          <Box
+            component="img"
+            sx={{
+              width: 150,
+              // maxHeight: { xs: 300, md: 167 },
+              // maxWidth: { xs: 400, md: 250 },
+            }}
+            alt="Illustration"
+            src={illustration}
+          />
+        </center>
+      </div>
       <Grid container spacing={3}>
         <Grid item md={6} sm={6} xs={6}>
-          <Card title="To do List" style={{ width: "100%" }}>
+          <Card style={{ width: "100%" }}>
             <div
               style={{
                 textAlign: "center",

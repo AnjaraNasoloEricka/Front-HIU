@@ -22,6 +22,8 @@ import CloudIcon from "@mui/icons-material/Cloud";
 import SendIcon from "@mui/icons-material/Send";
 import { useAlert } from "react-alert";
 import ReactLoading from "react-loading";
+import illustration from "../../../images/illustrations/photos/cloud2.png";
+import { Box } from "@mui/system";
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -42,8 +44,8 @@ const CloudDirectory = () => {
   const [isLoadingUpload, setIsLoadingUpload] = useState(false);
 
   const initializeCloudData = () => {
-    setFileUpload(null)
-    setDossier("")
+    setFileUpload(null);
+    setDossier("");
     setIsLoadingCloudData(true);
     getCloudFilesApi()
       .then((e) => {
@@ -135,96 +137,126 @@ const CloudDirectory = () => {
         <Container>
           <Stack spacing={3}>
             <>
-              <SimpleCard>
-                <h3>Upload</h3>
-                <Button onClick={handleClick} variant="outlined">
-                  <CloudDownloadIcon />{" "}
-                  <span style={{ marginLeft: 10 }}>
-                    {fileUpload
-                      ? fileUpload?.name
-                      : "Choisissez un fichier à uploader ..."}
-                  </span>
-                </Button>
-                <br />
-                <br />
-                <input
-                  type="file"
-                  ref={hiddenFileInput}
-                  style={{ display: "none" }}
-                  onChange={handleChangeUploadedFile}
-                />
+              <SimpleCard
+                style={{
+                  display: "flex",
+                  alignItems: "center",
+                }}
+              >
                 <div
-                  style={
-                    {
-                      // display: "flex",
-                      // alignItems: "center",
-                    }
-                  }
+                  style={{
+                    width: "30%",
+                  }}
                 >
-                  <TextField
-                    variant="standard"
-                    placeholder={`Nouveau dossier ... `}
-                    value={dossier}
-                    onChange={(e) => {
-                      setDossier(e.target.value);
-                    }}
+                  <h3>Upload</h3>
+                  <Button onClick={handleClick} variant="outlined">
+                    <CloudDownloadIcon />{" "}
+                    <span style={{ marginLeft: 10 }}>
+                      {fileUpload
+                        ? fileUpload?.name
+                        : "Choisissez un fichier à uploader ..."}
+                    </span>
+                  </Button>
+                  <br />
+                  <br />
+                  <input
+                    type="file"
+                    ref={hiddenFileInput}
+                    style={{ display: "none" }}
+                    onChange={handleChangeUploadedFile}
                   />
-                  <br />
-                  <br />
-                  <span style={{}}>ou</span>
-                  <br />
-                  <FormControl variant="standard" sx={{ minWidth: 200 }}>
-                    <InputLabel id="demo-simple-select-standard-label">
-                      Choisir un dossier
-                    </InputLabel>
-                    <Select
-                      labelId="demo-simple-select-standard-label"
-                      id="demo-simple-select-standard"
+                  <div
+                    style={
+                      {
+                        // display: "flex",
+                        // alignItems: "center",
+                      }
+                    }
+                  >
+                    <TextField
+                      variant="standard"
+                      placeholder={`Nouveau dossier ... `}
                       value={dossier}
                       onChange={(e) => {
                         setDossier(e.target.value);
                       }}
-                      label="Choisir un dossier existant"
+                    />
+                    <br />
+                    <br />
+                    <span style={{}}>ou</span>
+                    <br />
+                    <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                      <InputLabel id="demo-simple-select-standard-label">
+                        Choisir un dossier
+                      </InputLabel>
+                      <Select
+                        labelId="demo-simple-select-standard-label"
+                        id="demo-simple-select-standard"
+                        value={dossier}
+                        onChange={(e) => {
+                          setDossier(e.target.value);
+                        }}
+                        label="Choisir un dossier existant"
+                      >
+                        <MenuItem value="">
+                          <em>None</em>
+                        </MenuItem>
+                        <MenuItem value={"Informatique"}>Informatique</MenuItem>
+                        <MenuItem value={"Gestion"}>Gestion</MenuItem>
+                        <MenuItem value={"Anglais"}>Anglais</MenuItem>
+                      </Select>
+                    </FormControl>
+                  </div>
+                  <br />
+                  <br />
+                  {fileUpload && dossier ? (
+                    <Button
+                      variant="contained"
+                      disabled={isLoadingUpload}
+                      onClick={() => {
+                        handleUploadFile();
+                      }}
                     >
-                      <MenuItem value="">
-                        <em>None</em>
-                      </MenuItem>
-                      <MenuItem value={"Informatique"}>Informatique</MenuItem>
-                      <MenuItem value={"Gestion"}>Gestion</MenuItem>
-                      <MenuItem value={"Anglais"}>Anglais</MenuItem>
-                    </Select>
-                  </FormControl>
-                </div>
-                <br />
-                <br />
-                {fileUpload && dossier ? (
-                  <Button
-                    variant="contained"
-                    disabled={isLoadingUpload}
-                    onClick={() => {
-                      handleUploadFile();
-                    }}
-                  >
-                    {isLoadingUpload ? (
-                      <ReactLoading
-                        type={"bubbles"}
-                        color={"blue"}
-                        height={20}
-                        width={20}
-                      />
-                    ) : (
+                      {isLoadingUpload ? (
+                        <ReactLoading
+                          type={"bubbles"}
+                          color={"blue"}
+                          height={20}
+                          width={20}
+                        />
+                      ) : (
+                        <SendIcon />
+                      )}
+                    </Button>
+                  ) : (
+                    <Button
+                      disabled
+                      variant="contained"
+                      style={{ backgroundColor: "#d7d7d7", color: "#9d9d9d" }}
+                    >
                       <SendIcon />
-                    )}
-                  </Button>
-                ) : (
-                  <Button
-                    disabled
-                    variant="contained"
-                    style={{ backgroundColor: "#d7d7d7", color: "#9d9d9d" }}
-                  >
-                    <SendIcon />
-                  </Button>
-                )}
+                    </Button>
+                  )}
+                </div>
+                <div
+                  style={{
+                    width: "70%",
+                    display: "flex",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Box
+                    component="img"
+                    sx={
+                      {
+                        maxWidth: 400
+                      }
+                    }
+                    alt="Illustration"
+                    src={illustration}
+                    marginLeft={5}
+                  />
+                </div>
               </SimpleCard>
             </>
           </Stack>

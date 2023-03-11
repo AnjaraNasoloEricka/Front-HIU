@@ -13,6 +13,8 @@ export const navigations = [
     ],
   },
   { name: "Fichiers cloud", path: "/cloud", icon: "cloud" },
+  { name: "Vos badges", path: "/badges", icon: "verified" },
+
     // { label: 'PAGES', type: 'label' },
   // {
   //   name: 'Session/Auth',

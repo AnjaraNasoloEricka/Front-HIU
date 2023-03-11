@@ -3,6 +3,7 @@ import { getExamList } from "app/apis/examApi";
 import { Breadcrumb, MatxLoading, SimpleCard } from "app/components";
 import PaginationTableExam from "app/components/MatxTable/PaginationTableExam";
 import { useEffect, useState } from "react";
+import illustration from "../../../images/illustrations/photos/Examen.png";
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -75,13 +76,23 @@ const Exams = () => {
         <Box className="breadcrumb">
           <Breadcrumb routeSegments={[{ name: "Examen", path: "/Examen" }]} />
         </Box>
+        <div>
+          <center>
+            <h1>Examens</h1>
+          </center>
+        </div>
+        <div></div>
         <SimpleCard title="Liste de mes examens à venir / en cours">
           {isLoading ? (
             <MatxLoading text={`Chargement en cours ...`} />
           ) : (
-            <PaginationTableExam initializeExamsList={initializeExamsList} examlist={exams} />
+            <PaginationTableExam
+              initializeExamsList={initializeExamsList}
+              examlist={exams}
+            />
           )}
         </SimpleCard>
+        <center><Box component="img" sx={{}} alt="Illustration" src={illustration} /></center>
       </Container>
     </div>
   );

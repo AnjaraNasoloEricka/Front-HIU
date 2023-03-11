@@ -9,11 +9,13 @@ import routes from "./routes";
 import { getTokenCode, onMessageListener } from "../firebase";
 import { useState, useEffect } from "react";
 import { Button, Row, Col, Toast } from "react-bootstrap";
+import { useAlert } from "react-alert";
+import { Alert } from '@mui/material';
 // import 'bootstrap/dist/css/bootstrap.min.css';
 
 const App = () => {
   const content = useRoutes(routes);
-
+  const alert = useAlert()
   const [show, setShow] = useState(false);
   const [notification, setNotification] = useState({
     title: "",
@@ -37,19 +39,23 @@ const App = () => {
 
   onMessageListener()
     .then((payload) => {
+      console.log('new nofication')
       setShow(true);
       setNotification({
         title: payload.notification.title,
         body: payload.notification.body,
       });
+      
+      setShow(false)
     })
     .catch((err) => console.log("failed : ", err));
   return (
     <Provider store={Store}>
       <SettingsProvider>
         <MatxTheme>
+          {}
           {/* <AuthProvider>{content}</AuthProvider> */}
-          <Toast
+          {/* <Toast
             onClose={() => setShow(false)}
             show={show}
             delay={10000}
@@ -62,7 +68,7 @@ const App = () => {
               <small>just now</small>
             </Toast.Header>
             <Toast.Body>{notification.body}</Toast.Body>
-          </Toast>
+          </Toast> */}
           {content}
         </MatxTheme>
       </SettingsProvider>
