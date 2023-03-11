@@ -1,6 +1,5 @@
 import {
   Button,
-  CircularProgress,
   Grid,
   Icon,
   Stack,
@@ -11,7 +10,7 @@ import { BASE_URL, TOKEN } from "app/config";
 import axios from "axios";
 import { useEffect, useState } from "react";
 import { useAlert } from "react-alert";
-import { SimpleCard } from "..";
+import { MatxLoading, SimpleCard } from "..";
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -105,7 +104,7 @@ const PaginationTableCommentaire = ({ pub, initiatePublicationDetails }) => {
                   {isLoadingNewComment ? (
                     <Button>
                       <Icon>
-                        <CircularProgress size={20} />
+                        <MatxLoading />
                       </Icon>
                     </Button>
                   ) : (

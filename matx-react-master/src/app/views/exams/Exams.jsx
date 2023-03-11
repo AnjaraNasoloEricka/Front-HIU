@@ -77,7 +77,7 @@ const Exams = () => {
         </Box>
         <SimpleCard title="Liste de mes examens à venir / en cours">
           {isLoading ? (
-            <MatxLoading />
+            <MatxLoading text={`Chargement en cours ...`} />
           ) : (
             <PaginationTableExam initializeExamsList={initializeExamsList} examlist={exams} />
           )}

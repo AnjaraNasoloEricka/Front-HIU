@@ -1,4 +1,4 @@
-import { Box, styled, Icon, Button, CircularProgress } from "@mui/material";
+import { Box, styled, Icon, Button } from "@mui/material";
 import { getExamDetails } from "app/apis/examApi";
 import { Breadcrumb, MatxLoading, SimpleCard } from "app/components";
 import { BASE_URL, TOKEN } from "app/config";
@@ -84,7 +84,7 @@ const Lessons = () => {
             }}
           >
             {isLoadingLessonsList ? (
-              <CircularProgress size={20} color="warning" />
+              <MatxLoading />
             ) : (
               <>
                 <Icon
@@ -102,8 +102,7 @@ const Lessons = () => {
         <SimpleCard title="">
           {isLoadingLessonsList ? (
             <>
-              <MatxLoading />
-              <center>Chargement de la liste des leçons en cours ...</center>
+              <MatxLoading text={`Chargement de la liste des leçons ...`} />
             </>
           ) : (
             <>

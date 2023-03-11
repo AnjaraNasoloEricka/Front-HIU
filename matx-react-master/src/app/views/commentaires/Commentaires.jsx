@@ -58,10 +58,7 @@ const Commentaires = () => {
         </Box>
         {isLoadingPublication ? (
           <>
-            <MatxLoading />
-            <b>
-              <center>Chargement de la publication ...</center>
-            </b>
+            <MatxLoading text={`Chargement de la publication ...`}/>
           </>
         ) : (
           <SimpleCard

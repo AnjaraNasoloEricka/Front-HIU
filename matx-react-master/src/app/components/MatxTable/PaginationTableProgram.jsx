@@ -1,7 +1,6 @@
 import {
   Box,
   Card,
-  CircularProgress,
   Icon,
   IconButton,
   styled,
@@ -9,7 +8,6 @@ import {
   TableBody,
   TableCell,
   TableHead,
-  TablePagination,
   TableRow,
 } from "@mui/material";
 import { deleteProgram } from "app/apis/programApi";
@@ -29,8 +27,7 @@ const StyledTable = styled(Table)(() => ({
 
 const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
   const defaultprogram = { heure_debut: "08:00", heure_fin: "09:00" };
-  const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(5);
+
   const [programListState, setProgramListState] = useState({ ...programlist });
   // const [openDeleteProgram, setOpenDeleteProgram] = useState(false)
   const [isLoadingDeleteProgram, setIsLoadingDeleteProgram] = useState(false);
@@ -38,15 +35,6 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
   useEffect(() => {
     setProgramListState({ ...programlist });
   }, [programlist]);
-
-  const handleChangePage = (_, newPage) => {
-    setPage(newPage);
-  };
-
-  const handleChangeRowsPerPage = (event) => {
-    setRowsPerPage(+event.target.value);
-    setPage(0);
-  };
 
   const handleDeleteProgram = (programId) => {
     setIsLoadingDeleteProgram(programId);
@@ -148,7 +136,7 @@ const PaginationTableProgram = ({ programlist, initializeProgramList }) => {
                         </Card>
                         <Card>
                           {isLoadingDeleteProgram === program._id ? (
-                            <CircularProgress className="cirle-progress" />
+                            <MatxLoading />
                           ) : (
                             <IconButton
                               onClick={() => {

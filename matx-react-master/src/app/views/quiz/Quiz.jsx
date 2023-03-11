@@ -1,4 +1,4 @@
-import { Stack, Button, Card, CircularProgress } from "@mui/material";
+import { Stack, Button, Card } from "@mui/material";
 import { Box, styled } from "@mui/system";
 import { Breadcrumb, MatxLoading } from "app/components";
 import { useEffect, useRef, useState } from "react";
@@ -163,7 +163,7 @@ const Quiz = () => {
             </Button>
           </div>
         )}
-        {showResult && !showResultsResponses && <CircularProgress />}
+        {showResult && !showResultsResponses && <MatxLoading />}
         {showResult && showResultsResponses && (
           <div>
             <h1>Réponses</h1>
@@ -177,10 +177,7 @@ const Quiz = () => {
       </Stack>
       {isLoadingListQuiz && (
         <>
-          <MatxLoading />
-          <p style={{textAlign: 'center'}}>
-            Chargement du quizz en cours, veuillez patienter ...
-          </p>
+          <MatxLoading text={`Chargement du quizz en cours, veuillez patienter ...`} />
         </>
       )}
       {!showResult && !isLoadingListQuiz && (

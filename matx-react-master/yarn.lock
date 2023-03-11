@@ -10526,6 +10526,11 @@
   "resolved" "https://registry.npmjs.org/react-lifecycles-compat/-/react-lifecycles-compat-3.0.4.tgz"
   "version" "3.0.4"
 
+"react-loading-skeleton@^3.2.0":
+  "integrity" "sha512-kN12x4Ud69jbksr2EdhYywAFeW4bPdvFQ9p3ID1OM/QeFjgwFSmSUY2a6P6uOb5ACzWp3ozY8C+7+04KR6+PHA=="
+  "resolved" "https://registry.npmjs.org/react-loading-skeleton/-/react-loading-skeleton-3.2.0.tgz"
+  "version" "3.2.0"
+
 "react-material-ui-form-validator@^3.0.0":
   "integrity" "sha512-+ZrAJK/9FrXQVArJJzhzeIBTvfW9GMlxvAirCwYFd32kUy2iyTKRjXUwGWh/s5RuB2LASXgLCtfs+Si1/WdNfw=="
   "resolved" "https://registry.npmjs.org/react-material-ui-form-validator/-/react-material-ui-form-validator-3.0.1.tgz"

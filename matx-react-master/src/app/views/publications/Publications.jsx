@@ -1,7 +1,5 @@
 import { Box, styled } from "@mui/material";
-import { getExamList } from "app/apis/examApi";
 import { Breadcrumb, MatxLoading, SimpleCard } from "app/components";
-import PaginationTableExam from "app/components/MatxTable/PaginationTableExam";
 import PaginationTablePublication from "app/components/MatxTable/PaginationTablePublication";
 import { BASE_URL, TOKEN } from "app/config";
 import axios from "axios";
@@ -59,9 +57,7 @@ const Publications = () => {
         <SimpleCard title="Forum de discussions">
           {isLoadingPublicationsList ? (
             <>
-              <MatxLoading />
-              <br />
-              <center>Chargement des publications en cours ...</center>
+              <MatxLoading text={`Chargement des publications ...`} />
             </>
           ) : (
             <PaginationTablePublication publications={publicationsList} />
