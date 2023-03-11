@@ -1,11 +1,9 @@
-import { Breadcrumb } from "react-bootstrap";
 import {
-  Box,
   Button,
-  CircularProgress,
-  Grid,
-  Icon,
-  Input,
+  FormControl,
+  InputLabel,
+  MenuItem,
+  Select,
   Stack,
   styled,
   TextField,
@@ -13,20 +11,17 @@ import {
 import React, { useState, useRef, useEffect } from "react";
 import { MatxLoading, SimpleCard } from "app/components";
 import PaginationTableCloud from "app/components/MatxTable/PaginationTableCloud";
-import FormDialogCloud from "app/components/MatxDialog/FormDialogCloud";
 import { storage } from "../../../firebase";
 import CloudDownloadIcon from "@mui/icons-material/CloudDownload";
-import {
-  ref,
-  uploadBytes,
-  getDownloadURL,
-  listAll,
-  list,
-} from "firebase/storage";
+import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { v4 } from "uuid";
 import { BASE_URL, TOKEN } from "app/config";
 import Autocomplete from "@mui/material/Autocomplete";
 import { getCloudFilesApi } from "app/apis/cloudApi";
+import CloudIcon from "@mui/icons-material/Cloud";
+import SendIcon from "@mui/icons-material/Send";
+import { useAlert } from "react-alert";
+import ReactLoading from "react-loading";
 
 const Container = styled("div")(({ theme }) => ({
   margin: "30px",
@@ -37,13 +32,18 @@ const Container = styled("div")(({ theme }) => ({
   },
 }));
 const CloudDirectory = () => {
+  const alert = useAlert();
   const [cloudData, setCloudData] = useState([]);
   const [fileUpload, setFileUpload] = useState(null);
   const [dossier, setDossier] = useState("");
   const hiddenFileInput = useRef(null);
   const [isLoadingCloudData, setIsLoadingCloudData] = useState(true);
 
+  const [isLoadingUpload, setIsLoadingUpload] = useState(false);
+
   const initializeCloudData = () => {
+    setFileUpload(null)
+    setDossier("")
     setIsLoadingCloudData(true);
     getCloudFilesApi()
       .then((e) => {
@@ -67,6 +67,7 @@ const CloudDirectory = () => {
   // }
 
   const handleUploadFile = () => {
+    setIsLoadingUpload(true);
     if (fileUpload == null) return;
     const fileRef = ref(storage, `files/${dossier}/${fileUpload.name + v4()}`);
     uploadBytes(fileRef, fileUpload).then((snapshot) => {
@@ -85,8 +86,20 @@ const CloudDirectory = () => {
           }),
         })
           .then((response) => response.json())
-          .then((data) => console.log(data))
-          .catch((error) => console.error(error));
+          .then((data) => {
+            console.log(data);
+            alert.success(`Fichier uploadé avec succès`);
+          })
+          .catch((error) => {
+            console.error(error);
+            alert.error(`Une erreur est survenue lors de l'upload du fichier`);
+          })
+          .finally(() => {
+            setIsLoadingUpload(false);
+            setTimeout(() => {
+              initializeCloudData();
+            }, 1000);
+          });
       });
     });
   };
@@ -106,7 +119,19 @@ const CloudDirectory = () => {
 
   return (
     <Container>
-      <SimpleCard title="Espace Cloud">
+      <SimpleCard
+        title={
+          <div
+            style={{
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "end",
+            }}
+          >
+            <CloudIcon style={{ marginRight: 10, width: 20 }} /> Espace Cloud
+          </div>
+        }
+      >
         <Container>
           <Stack spacing={3}>
             <>
@@ -115,53 +140,81 @@ const CloudDirectory = () => {
                 <Button onClick={handleClick} variant="outlined">
                   <CloudDownloadIcon />{" "}
                   <span style={{ marginLeft: 10 }}>
-                    Choisissez un fichier à uploader ...
+                    {fileUpload
+                      ? fileUpload?.name
+                      : "Choisissez un fichier à uploader ..."}
                   </span>
                 </Button>
                 <br />
-                {fileUpload && fileUpload.name}
+                <br />
                 <input
                   type="file"
                   ref={hiddenFileInput}
                   style={{ display: "none" }}
                   onChange={handleChangeUploadedFile}
                 />
-                <br />
-                {fileUpload && (
-                  // <TextField
-                  //   value={dossier}
-                  //   onChange={(e) => {
-                  //     console.log(e.target.value)
-                  //     setDossier(e.target.value);
-                  //   }}
-                  // />
-                  <Autocomplete
+                <div
+                  style={
+                    {
+                      // display: "flex",
+                      // alignItems: "center",
+                    }
+                  }
+                >
+                  <TextField
+                    variant="standard"
+                    placeholder={`Nouveau dossier ... `}
                     value={dossier}
-                    disablePortal
-                    id="combo-box-demo"
-                    options={[
-                      { label: "informatique", year: 1994 },
-                      { label: "gestion", year: 1972 },
-                    ]}
-                    sx={{ width: 300 }}
-                    renderInput={(params) => (
-                      <TextField
-                        onChange={(e) => setDossier(e.target.value)}
-                        {...params}
-                        label="Nom de dossier"
-                      />
-                    )}
+                    onChange={(e) => {
+                      setDossier(e.target.value);
+                    }}
                   />
-                )}
+                  <br />
+                  <br />
+                  <span style={{}}>ou</span>
+                  <br />
+                  <FormControl variant="standard" sx={{ minWidth: 200 }}>
+                    <InputLabel id="demo-simple-select-standard-label">
+                      Choisir un dossier
+                    </InputLabel>
+                    <Select
+                      labelId="demo-simple-select-standard-label"
+                      id="demo-simple-select-standard"
+                      value={dossier}
+                      onChange={(e) => {
+                        setDossier(e.target.value);
+                      }}
+                      label="Choisir un dossier existant"
+                    >
+                      <MenuItem value="">
+                        <em>None</em>
+                      </MenuItem>
+                      <MenuItem value={"Informatique"}>Informatique</MenuItem>
+                      <MenuItem value={"Gestion"}>Gestion</MenuItem>
+                      <MenuItem value={"Anglais"}>Anglais</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+                <br />
                 <br />
                 {fileUpload && dossier ? (
                   <Button
                     variant="contained"
+                    disabled={isLoadingUpload}
                     onClick={() => {
                       handleUploadFile();
                     }}
                   >
-                    Upload
+                    {isLoadingUpload ? (
+                      <ReactLoading
+                        type={"bubbles"}
+                        color={"blue"}
+                        height={20}
+                        width={20}
+                      />
+                    ) : (
+                      <SendIcon />
+                    )}
                   </Button>
                 ) : (
                   <Button
@@ -169,7 +222,7 @@ const CloudDirectory = () => {
                     variant="contained"
                     style={{ backgroundColor: "#d7d7d7", color: "#9d9d9d" }}
                   >
-                    Upload
+                    <SendIcon />
                   </Button>
                 )}
               </SimpleCard>
@@ -184,7 +237,7 @@ const CloudDirectory = () => {
               alignItems: "center",
             }}
           >
-            <MatxLoading text={`Chargement des fichiers ...`}/>
+            <MatxLoading text={`Chargement des fichiers ...`} />
             {/* <CircularProgress style={{ marginRight: 10 }} /> */}
             {/* <p style={{ color: "grey", fontSize: 15 }}>
             </p> */}

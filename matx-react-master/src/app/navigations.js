@@ -4,7 +4,16 @@ export const navigations = [
   { name: "Todo", path: "/todo", icon: "article" },
   { name: "Examen", path: "/exams", icon: "create" },
   { name: "Forum", path: "/forum", icon: "forum" },
-  // { label: 'PAGES', type: 'label' },
+  {
+    name: "Mini-jeux",
+    icon: "games",
+    children: [
+      { name: "Jeu de memoire | Carte", icon: "psychology", path: "/memorygame" },
+      { name: "Jeu de taquin", icon: "psychology", path: "/puzzlegame" },
+    ],
+  },
+  { name: "Fichiers cloud", path: "/cloud", icon: "cloud" },
+    // { label: 'PAGES', type: 'label' },
   // {
   //   name: 'Session/Auth',
   //   icon: 'security',
@@ -15,15 +24,6 @@ export const navigations = [
   //     { name: 'Error', iconText: '404', path: '/session/404' },
   //   ],
   // },
-  {
-    name: "Mini-jeux",
-    icon: "games",
-    children: [
-      { name: "Jeu de memoire | Carte", icon: "psychology", path: "/memorygame" },
-      { name: "Jeu de taquin", icon: "psychology", path: "/puzzlegame" },
-      // { name: "Sign up", iconText: "SU", path: "/session/signup" },
-    ],
-  },
   // { label: 'Components', type: 'label' },
   // {
   //   name: 'Components',

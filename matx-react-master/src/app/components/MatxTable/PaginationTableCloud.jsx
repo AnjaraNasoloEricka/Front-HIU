@@ -31,7 +31,7 @@ const Container = styled("div")(({ theme }) => ({
                             </Grid>
                             <Grid item lg={3} md={3} sm={3} xs={3}>
                                 <h3>
-                                    <Link to="/cloud/file" state={{allfile:directory.fichier}}>
+                                    <Link to={`/cloud/${directory._id}/file`} state={{allfile:directory.fichier}}>
                                         <Button color="primary" aria-label="Edit" variant="outlined">
                                             Voir fichiers
                                         </Button>
