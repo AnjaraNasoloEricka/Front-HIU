@@ -33,7 +33,7 @@ export default function FormDialogAddTodo({ addNewTodo }) {
 
   return (
     <Box>
-      <Button color="success" aria-label="Edit" onClick={handleClickOpen} style={{borderWidth: 2, borderColor: 'green'}}>
+      <Button color="primary" variant="contained" aria-label="Edit" onClick={handleClickOpen} style={{borderWidth: 2, borderColor: 'green',marginLeft:"20px"}}>
         <Icon>addcircleoutline</Icon>
       </Button>
       <Dialog

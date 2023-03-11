@@ -17,7 +17,7 @@ const StatChart = () => {
     },
     xAxis: {
       type: 'category',
-      data: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+      data: ['Lundi', 'Mardi', 'Mercredi', 'Jeudi', 'Vendredi', 'Samedi', 'Dimanche'],
       axisLine: { show: false },
       axisTick: { show: false },
       axisLabel: {
@@ -39,8 +39,8 @@ const StatChart = () => {
       {
         data: [30, 40, 20, 50, 40, 80, 90],
         type: 'line',
-        stack: 'This month',
-        name: 'This month',
+        stack: 'Ce mois-ci',
+        name: 'Ce mois-ci',
         smooth: true,
         symbolSize: 4,
         lineStyle: { width: 4 },
@@ -48,8 +48,8 @@ const StatChart = () => {
       {
         data: [20, 50, 15, 50, 30, 70, 95],
         type: 'line',
-        stack: 'Last month',
-        name: 'Last month',
+        stack: 'Le mois dernier',
+        name: 'Le mois dernier',
         smooth: true,
         symbolSize: 4,
         lineStyle: { width: 4 },

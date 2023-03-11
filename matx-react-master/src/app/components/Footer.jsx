@@ -41,11 +41,11 @@ const Footer = () => {
       <AppBar color="primary" position="static" sx={{ zIndex: 96 }}>
         <AppFooter>
           <FooterContent>
-            <Button variant="contained" color="secondary">
+            <span style={{color:"orange"}}>
               Copyright 2023 {PROJECT_NAME}
-            </Button>
+            </span>
             <Span sx={{ m: 'auto' }}></Span>
-            <Paragraph sx={{ m: 0 }}>Design and Developed by a cat</Paragraph>
+            <Paragraph sx={{ m: 0 }}>Développé par l'équipe At-Hack On Titan</Paragraph>
           </FooterContent>
         </AppFooter>
       </AppBar>

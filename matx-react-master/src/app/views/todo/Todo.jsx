@@ -239,6 +239,7 @@ const Todo = () => {
               </h4>
             </div>
             <CardContent style={{ backgroundColor: "rgb(223 223 223)" }}>
+
               {todo.filter((singleTodo) => singleTodo.isDone === "no").length <=
                 0 && (
                 <p style={{ textAlign: "center", color: "grey" }}>
@@ -263,6 +264,7 @@ const Todo = () => {
                                 display: "flex",
                                 justifyContent: "start",
                                 alignItems: "center",
+                                width: "100%",
                               }}
                             >
                               {/* Modification */}
@@ -286,6 +288,7 @@ const Todo = () => {
                               ) : (
                                 <>
                                   <IconButton
+                                    style={{marginRight:"20px"}}
                                     onClick={() => {
                                       deleteTodo(item);
                                     }}
@@ -295,20 +298,13 @@ const Todo = () => {
                                   {item.tache}
                                 </>
                               )}
-                            </h6>
-                          </Grid>
-                          <Grid item md={2} sm={2} xs={2}>
-                            <h5>
-                              {isLoadingCheckTodo === item._id ? (
-                                <MatxLoading />
-                              ) : (
-                                <Checkbox
+                              <Checkbox
                                   color="primary"
                                   value="checkedG"
+                                  style={{display:"flex",alignItems:"center"}}
                                   onChange={() => changeCheck(item)}
                                 />
-                              )}
-                            </h5>
+                            </h6>
                           </Grid>
                         </Grid>
                       </Card>
@@ -371,7 +367,9 @@ const Todo = () => {
                                   >
                                     <Icon color="error">deleteforever</Icon>
                                   </IconButton>
-                                  {item.tache}
+                                  <span style={{textDecoration:"2px line-through red"}}>
+                                    {item.tache}
+                                  </span>
                                 </>
                               )}
                             </h6>
